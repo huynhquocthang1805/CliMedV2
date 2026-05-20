@@ -1,0 +1,22 @@
+{
+  "source": "D:\\Thực tập\\GraphRag\\CliMedV2\\CliMedV2\\CliMedV2\\data\\NghiencuuHFLC.csv",
+  "created_at": "2026-05-07T12:41:45.348898+00:00",
+  "test_size": 0.2,
+  "random_state": 42,
+  "target_col": "benhcanhcuoicunglagi",
+  "n_total": 148,
+  "n_train": 118,
+  "n_test": 30,
+  "train_class_distribution": {
+    "2": 77,
+    "3": 37,
+    "1": 4
+  },
+  "test_class_distribution": {
+    "2": 19,
+    "3": 10,
+    "1": 1
+  },
+  "train_file": "train_80.csv",
+  "test_file": "test_20.csv"
+}

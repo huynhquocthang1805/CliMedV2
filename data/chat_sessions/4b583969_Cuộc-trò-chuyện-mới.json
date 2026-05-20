@@ -1,0 +1,48 @@
+{
+  "session_id": "4b583969",
+  "title": "Cuộc trò chuyện mới",
+  "created_at": "2026-05-07T12:41:42.763908+00:00",
+  "updated_at": "2026-05-07T13:12:26.194011+00:00",
+  "messages": [
+    {
+      "role": "user",
+      "content": "xu hướng các chỉ số là gì? Có nguy hiểm không? chẩn đoán có phải bệnh sốt xuất huyết không? Cách xử lý hiện tại là gì? điều cần làm và thuốc có thể dùng?\nThông tin: Giới tính: nữ | Tuổi: 6 | Cân nặng (kg): 17.0 | Chiều cao (cm): 100.0\nNgày bệnh lúc nhập viện: 6.0\nTriệu chứng (+): nôn ói, đau bụng, xuất huyết\nLab theo ngày (N3-N7 — giai đoạn giữa):\n   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).\n  Bạch cầu (K/uL): N3=—, N4=—, N5=—, N6=3.4, N7=13.3\n  Tiểu cầu (K/uL): N3=—, N4=—, N5=—, N6=15.0, N7=70.0\n  Hct (%): N3=—, N4=—, N5=—, N6=31.7, N7=30.0\n  HFLC (%): N3=—, N4=—, N5=—, N6=0.8, N7=2.1\n  %HFLC: N3=—, N4=—, N5=—, N6=23.3, N7=15.2\nLab khác: AST=2119.0, ALT=581.0, Creatinin=79.0\n",
+      "timestamp": "2026-05-07T12:44:34.822010+00:00"
+    },
+    {
+      "role": "assistant",
+      "content": "### Tóm tắt\nBệnh nhân nữ 6 tuổi có các triệu chứng và lab xét nghiệm gợi ý bệnh sốt xuất huyết Dengue (SXHD), đặc biệt là giai đoạn nguy hiểm N4-N6.\n\n### Phân tích\n1. **Triệu chứng**: Nôn ói, đau bụng, xuất huyết.\n2. **Xét nghiệm**:\n   - Bạch cầu: tăng từ N6 (3.4 K/uL) đến N7 (13.3 K/uL).\n   - Tiểu cầu: giảm nhanh từ N6 (15.0 K/uL) xuống N7 (70.0 K/uL), gợi ý xuất huyết.\n   - HCT và HFLC: giảm, đặc biệt là HCT từ 31.7% đến 30%, HFLC tăng lên 2.1%.\n   - AST và ALT: tăng đáng kể (2119.0 U/L và 581.0 U/L), gợi ý tổn thương gan.\n\n### Khuyến nghị\n- **Theo dõi sát**: Dấu hiệu cảnh báo như đau bụng, nôn nhiều cần được theo dõi nghiêm ngặt.\n- **Huyết học**: Cần theo dõi chặt chẽ HCT, PLT để phát hiện sớm xuất huyết nặng.\n- **Gan**: AST và ALT cao cần điều trị giảm men gan.\n\n### Cách xử lý\n1. **Giảm sốt**: Sử dụng paracetamol (theo cân nặng).\n2. **Hỗ trợ hô hấp**: Nếu có dấu hiệu khó thở, cần thông khí nhân tạo.\n3. **Điều trị tổn thương gan**: Giảm men gan bằng các thuốc như ursodeoxycholic acid.\n\n### Thuốc\n- Paracetamol (theo cân nặng, liều khuyến cáo).\n- Ursodeoxycholic acid để giảm men gan.\n\nChưa đủ dữ liệu về PLT và HCT cụ thể, cần xét nghiệm thêm.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.",
+      "timestamp": "2026-05-07T12:47:52.105986+00:00"
+    },
+    {
+      "role": "user",
+      "content": "Thông tin: Giới tính: nam | Tuổi: 36 | Cân nặng (kg): 60.0 | Chiều cao (cm): 160.0\nNgày bệnh lúc nhập viện: 5.0\nTriệu chứng (+): đau bụng, xuất huyết\nLab theo ngày (N3-N7 — giai đoạn giữa):\n   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).\n  Bạch cầu (K/uL): N3=—, N4=—, N5=7.1, N6=9.3, N7=12.2\n  Tiểu cầu (K/uL): N3=—, N4=—, N5=9.0, N6=5.0, N7=10.0\n  Hct (%): N3=—, N4=—, N5=54.2, N6=51.4, N7=49.2\n  HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=—\n  %HFLC: N3=—, N4=—, N5=—, N6=—, N7=—\n\nLab khác: AST=124.0, ALT=76.0, Creatinin=101.0\nxu hướng các chỉ số là gì? Có nguy hiểm không? chẩn đoán có phải bệnh sốt xuất huyết không? Cách xử lý hiện tại là gì? điều cần làm và thuốc có thể dùng?",
+      "timestamp": "2026-05-07T12:49:23.660213+00:00"
+    },
+    {
+      "role": "assistant",
+      "content": "### Tóm tắt\n\nBệnh nhân nữ 6 tuổi và nam 36 tuổi đều có triệu chứng của SXHD, đặc biệt là đau bụng, nôn ói, xuất huyết. Các chỉ số xét nghiệm cho thấy tình trạng giảm tiểu cầu nghiêm trọng và tăng AST/ALT, gợi ý tổn thương gan.\n\n### Phân tích\n\n1. **Bệnh nhân nữ 6 tuổi:**\n   - Giai đoạn nguy hiểm (N4-N7): Bạch cầu ổn định nhưng tiểu cầu giảm từ N6.\n   - Hct giảm từ N6, %HFLC tăng từ N6, AST/ALT cao.\n   - Nguy cơ sốc và xuất huyết nặng.\n\n2. **Bệnh nhân nam 36 tuổi:**\n   - Giai đoạn nguy hiểm (N4-N7): Bạch cầu tăng dần, tiểu cầu giảm từ N5.\n   - Hct ổn định nhưng %HFLC tăng từ N7, AST/ALT cao.\n   - Nguy cơ sốc và suy gan.\n\n### Khuyến nghị\n\n1. **Theo dõi sát:**\n   - Tiêu chảy, nôn ói, đau bụng, xuất huyết.\n   - Chỉ số tiểu cầu, Hct, %HFLC, AST/ALT.\n\n2. **Đi khám khi:**\n   - Tăng sốc hoặc giảm tiểu cầu nhanh.\n   - Xuất hiện triệu chứng gan như vàng da, mệt mỏi.\n\n3. **Thuốc có thể dùng:**\n   - Paracetamol (theo cân nặng) để hạ sốt và giảm đau.\n   - Thận trọng với thuốc chống viêm không steroid do nguy cơ xuất huyết.\n\n### Kết luận\n\nCác bệnh nhân đều có dấu hiệu của SXHD, đặc biệt là giai đoạn nguy hiểm. Cần theo dõi sát các chỉ số và triệu chứng để kịp thời can thiệp nếu cần.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.",
+      "timestamp": "2026-05-07T12:50:35.623473+00:00"
+    },
+    {
+      "role": "user",
+      "content": "Thông tin: Giới tính: nam | Tuổi: 36 | Cân nặng (kg): 60.0 | Chiều cao (cm): 160.0 Ngày bệnh lúc nhập viện: 5.0 Triệu chứng (+): đau bụng, xuất huyết Lab theo ngày (N3-N7 — giai đoạn giữa): Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng). Bạch cầu (K/uL): N3=—, N4=—, N5=7.1, N6=9.3, N7=12.2 Tiểu cầu (K/uL): N3=—, N4=—, N5=9.0, N6=5.0, N7=10.0 Hct (%): N3=—, N4=—, N5=54.2, N6=51.4, N7=49.2 HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=— %HFLC: N3=—, N4=—, N5=—, N6=—, N7=—\n\nLab khác: AST=124.0, ALT=76.0, Creatinin=101.0 xu hướng các chỉ số là gì? Có nguy hiểm không? chẩn đoán có phải bệnh sốt xuất huyết không? Cách xử lý hiện tại là gì? điều cần làm và thuốc có thể dùng?",
+      "timestamp": "2026-05-07T12:53:24.891351+00:00"
+    },
+    {
+      "role": "assistant",
+      "content": "### Tóm tắt\nBệnh nhân nam 36 tuổi có triệu chứng đau bụng, xuất huyết. Các xét nghiệm cho thấy tăng bạch cầu và giảm tiểu cầu, gợi ý bệnh sốt xuất huyết Dengue (SXHD). AST và ALT cũng cao, gợi ý tổn thương gan.\n\n### Phân tích\n1. **Triệu chứng**: Đau bụng, xuất huyết.\n2. **Xét nghiệm**:\n   - Bạch cầu: tăng từ N5 đến N7 (7.1 K/uL -> 9.3 K/uL -> 12.2 K/uL).\n   - Tiểu cầu: giảm nhanh từ N5 (9.0 K/uL) xuống N6 (5.0 K/uL), N7 (10.0 K/uL).\n   - HCT: giảm từ N5 (54.2%) đến N7 (49.2%), gợi ý xuất huyết.\n   - AST và ALT: tăng, gợi ý tổn thương gan.\n\n### Khuyến nghị\n- **Theo dõi sát**: Dấu hiệu cảnh báo như đau bụng, nôn nhiều cần được theo dõi nghiêm ngặt.\n- **Huyết học**: Cần theo dõi chặt chẽ HCT, PLT để phát hiện sớm xuất huyết nặng.\n- **Gan**: AST và ALT cao cần điều trị giảm men gan.\n\n### Cách xử lý\n1. **Giảm sốt**: Sử dụng paracetamol (theo cân nặng).\n2. **Hỗ trợ hô hấp**: Nếu có dấu hiệu khó thở, cần thông khí nhân tạo.\n3. **Điều trị tổn thương gan**: Giảm men gan bằng các thuốc như ursodeoxycholic acid.\n\n### Thuốc\n- Paracetamol (theo cân nặng, liều khuyến cáo).\n- Ursodeoxycholic acid để giảm men gan.\n\n### Chẩn đoán\nCác triệu chứng và lab xét nghiệm gợi ý bệnh sốt xuất huyết Dengue. Cần xác nhận bằng test kháng nguyên hoặc kháng thể.\n\n---\n\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.",
+      "timestamp": "2026-05-07T12:54:54.014672+00:00"
+    },
+    {
+      "role": "user",
+      "content": "Thông tin: Giới tính: nữ | Tuổi: 21 | Cân nặng (kg): 40.0 | Chiều cao (cm): 157.0\nNgày bệnh lúc nhập viện: 5.0\nTriệu chứng (+): đau bụng\nLab theo ngày (N3-N7 — giai đoạn giữa):\n   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).\n  Bạch cầu (K/uL): N3=—, N4=—, N5=1.3, N6=3.5, N7=6.2\n  Tiểu cầu (K/uL): N3=—, N4=—, N5=43.0, N6=28.0, N7=27.0\n  Hct (%): N3=—, N4=—, N5=51.8, N6=48.6, N7=42.7\n  HFLC (%): N3=—, N4=—, N5=—, N6=0.7, N7=1.9\n  %HFLC: N3=—, N4=—, N5=—, N6=20.9, N7=30.7\nLab khác: AST=330.0, ALT=73.0, Creatinin=60.0\nxu hướng các chỉ số là gì? Có nguy hiểm không? chẩn đoán có phải bệnh sốt xuất huyết không? Cách xử lý hiện tại là gì? điều cần làm và thuốc có thể dùng?",
+      "timestamp": "2026-05-07T13:11:31.023608+00:00"
+    },
+    {
+      "role": "assistant",
+      "content": "### Tóm tắt\n\nBệnh nhân nam 36 tuổi và nữ 21 tuổi đều có triệu chứng của SXHD, đặc biệt là đau bụng. Các chỉ số xét nghiệm cho thấy tình trạng giảm tiểu cầu nghiêm trọng và tăng AST/ALT, gợi ý tổn thương gan.\n\n### Phân tích\n\n#### Bệnh nhân nam 36 tuổi:\n- **Giai đoạn nguy hiểm (N4-N7):**\n  - Bạch cầu: Tăng từ N5.\n  - Tiểu cầu: Giảm từ N5.\n  - Hct: Giảm từ N5.\n  - AST/ALT cao,Creatinin bình thường.\n\n#### Bệnh nhân nữ 21 tuổi:\n- **Giai đoạn nguy hiểm (N4-N7):**\n  - Bạch cầu: Giảm từ N5.\n  - Tiểu cầu: Giảm từ N5.\n  - Hct: Giảm từ N5.\n  - AST/ALT cao, Creatinin bình thường.\n\n### Khuyến nghị\n\n1. **Theo dõi sát:**\n   - Triệu chứng đau bụng, xuất huyết.\n   - Chỉ số tiểu cầu, Hct, AST/ALT.\n\n2. **Đi khám khi:**\n   - Tăng sốc hoặc giảm tiểu cầu nhanh.\n   - Xuất hiện triệu chứng gan như vàng da, mệt mỏi.\n\n3. **Thuốc có thể dùng:**\n   - Paracetamol (theo cân nặng) để hạ sốt và giảm đau.\n   - Thận trọng với thuốc chống viêm không steroid do nguy cơ xuất huyết.\n\n### Kết luận\n\nCác bệnh nhân đều có dấu hiệu của SXHD, đặc biệt là giai đoạn nguy hiểm. Cần theo dõi sát các chỉ số và triệu chứng để kịp thời can thiệp nếu cần.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.",
+      "timestamp": "2026-05-07T13:12:26.194011+00:00"
+    }
+  ]
+}

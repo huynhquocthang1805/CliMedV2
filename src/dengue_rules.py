@@ -23,14 +23,36 @@ def _lab_positive(labs: pd.DataFrame, exam: str)->bool:
     return False if temp.empty else ('dương' in str(temp.iloc[-1]['value']).lower() or 'pos' in str(temp.iloc[-1]['value']).lower())
 
 def evaluate_dengue_rules(labs: pd.DataFrame, clinical: dict, trend_flags: dict|None=None)->RuleOutput:
+    
     trend_flags=trend_flags or {}; evidence=[]; warnings=[]; red_flags=[]
+    
     plt=_latest_numeric(labs,'PLT'); wbc=_latest_numeric(labs,'WBC'); hct=_latest_numeric(labs,'HCT'); ast=_latest_numeric(labs,'AST'); alt=_latest_numeric(labs,'ALT')
-    if plt is not None and plt < 150: evidence.append(f'Tiểu cầu giảm ({plt}).')
+    # if plt is not None and plt < 150: evidence.append(f'Tiểu cầu giảm ({plt}).')
+    if plt is not None:
+        if plt < 20.0:
+            red_flags.append(f'Tiểu cầu giảm cực thấp ({plt} K/uL) - Nguy cơ xuất huyết nội tạng cao.')
+        elif plt < 50.0:
+            warnings.append(f'Tiểu cầu giảm sâu ({plt} K/uL).')
+        elif plt < 150:
+            evidence.append(f'Tiểu cầu giảm ({plt} K/uL).')
     if wbc is not None and wbc <= 4.5: evidence.append(f'Bạch cầu bình thường thấp/giảm ({wbc}).')
     if hct is not None and hct >= 45: evidence.append(f'Hct tăng hoặc cận cao ({hct}).')
     if trend_flags.get('hct_up_plt_down'): warnings.append('Hct tăng kèm tiểu cầu giảm theo thời gian.')
-    if (ast is not None and ast >= 400) or (alt is not None and alt >= 400): warnings.append('Men gan tăng >= 400 U/L.')
-    if (ast is not None and ast >= 1000) or (alt is not None and alt >= 1000): red_flags.append('Men gan >= 1000 U/L gợi ý tổn thương gan nặng.')
+    if trend_flags.get('hct_drop_suspicious'): 
+        red_flags.append('Hct giảm đột ngột trong khi tiểu cầu thấp & có xuất huyết -> Nghi ngờ xuất huyết nội tạng.')
+    # if (ast is not None and ast >= 400) or (alt is not None and alt >= 400): warnings.append('Men gan tăng >= 400 U/L.')
+    # if (ast is not None and ast >= 1000) or (alt is not None and alt >= 1000): red_flags.append('Men gan >= 1000 U/L gợi ý tổn thương gan nặng.')
+    if ast is not None or alt is not None:
+        val_max = max(filter(None, [ast, alt]), default=0)
+        if val_max >= 1000:
+            red_flags.append(f'Men gan >= 1000 U/L ({val_max}) gợi ý tổn thương gan nặng.')
+        elif val_max >= 300:
+            if plt is not None and plt < 50.0:
+                red_flags.append(f'Cảnh báo nặng: Men gan tăng cao ({val_max}) kết hợp Tiểu cầu thấp.')
+            else:
+                warnings.append(f'Men gan tăng cao ({val_max} U/L).')
+        elif val_max >= 200:
+            warnings.append(f'Men gan tăng ({val_max} U/L).')
     if _lab_positive(labs,'NS1') or _lab_positive(labs,'IgM') or _lab_positive(labs,'IgG'): evidence.append('Có bằng chứng huyết thanh học/kháng nguyên Dengue dương tính.')
     if clinical.get('abdominal_pain'): warnings.append('Đau bụng nhiều.')
     if clinical.get('vomiting_many'): warnings.append('Nôn nhiều hoặc nôn liên tục.')

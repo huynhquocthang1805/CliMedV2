@@ -1,0 +1,28 @@
+{
+  "session_id": "afc9a558",
+  "title": "Cuộc trò chuyện mới",
+  "created_at": "2026-05-04T17:40:00.761686+00:00",
+  "updated_at": "2026-05-04T17:44:01.098836+00:00",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Bệnh nhân dưới đây phân loại sốt mấy và như thế nào\nThông tin: Giới tính: nữ | Tuổi: 6 | Cân nặng (kg): 17.0 | Chiều cao (cm): 100.0\nNgày bệnh lúc nhập viện: 6.0\nTriệu chứng (+): nôn ói, đau bụng, xuất huyết\nLab theo ngày (N3-N7 — giai đoạn giữa):\n  ⚠️ Trong đó N4-N6 là giai đoạn nguy hiểm (có thể vào sốc).\n  Bạch cầu (K/uL): N3=—, N4=—, N5=—, N6=3.4, N7=13.3\n  Tiểu cầu (K/uL): N3=—, N4=—, N5=—, N6=15.0, N7=70.0\n  Hct (%): N3=—, N4=—, N5=—, N6=31.7, N7=30.0\n  HFLC (%): N3=—, N4=—, N5=—, N6=0.8, N7=2.1\n  %HFLC: N3=—, N4=—, N5=—, N6=23.3, N7=15.2\nXu hướng (trong focus window):\n  • TIEUCAU tăng N6 15.0→N7 70.0 (Δ=+55.0, 367%; min N6=15.0, max N7=70.0)\n  • HCT giảm N6 31.7→N7 30.0 (Δ=-1.7, 5%; min N7=30.0, max N6=31.7)\n  • BACHCAU tăng N6 3.4→N7 13.3 (Δ=+10.0, 297%; min N6=3.4, max N7=13.3)\nLab khác: AST=2119.0, ALT=581.0, Creatinin=79.0",
+      "timestamp": "2026-05-04T17:40:26.561527+00:00"
+    },
+    {
+      "role": "assistant",
+      "content": "### Tóm tắt\nBệnh nhân nữ 6 tuổi có triệu chứng sốt xuất huyết Dengue với nôn ói, đau bụng và xuất huyết.\n\n### Phân tích\n1. **Triệu chứng**: Bị nôn ói, đau bụng, xuất huyết - đây là các dấu hiệu cảnh báo của SXHD.\n2. **Giai đoạn bệnh**:\n   - Ngày 6 (N4-N6): Đây là giai đoạn nguy hiểm, có thể vào sốc.\n   - Xu hướng xét nghiệm: \n     - Tiểu cầu tăng từ N6 đến N7 (+55.0%, Δ=367%).\n     - HCT giảm nhẹ từ N6 đến N7 (-1.7%, Δ=-5%).\n     - Bạch cầu tăng từ N6 đến N7 (+10.0%, Δ=297%).\n\n### Khuyến nghị\n- Cần theo dõi sát các triệu chứng, đặc biệt là đau bụng và nôn ói.\n- Kiểm tra thường xuyên HCT, PLT, bạch cầu để phát hiện sớm dấu hiệu sốc.\n- Thực hiện xét nghiệm AST, ALT, creatinin để đánh giá tổn thương gan thận.\n\nBệnh nhân cần được theo dõi chặt chẽ trong giai đoạn nguy hiểm này.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.",
+      "timestamp": "2026-05-04T17:41:00.832357+00:00"
+    },
+    {
+      "role": "user",
+      "content": "bệnh nhân phân loại mấy ",
+      "timestamp": "2026-05-04T17:42:38.123485+00:00"
+    },
+    {
+      "role": "assistant",
+      "content": "Bệnh nhân phân loại sốt **N4-N6** và có dấu hiệu cảnh báo.\n\n### Phân tích:\n- **Sốt**: Bệnh nhân đã sốt từ ngày thứ 6 (N3) đến nay, đang ở giai đoạn N7.\n- **Triệu chứng**: Có nôn ói, đau bụng, xuất huyết — đây là các triệu chứng của SXHD.\n- **Xu hướng xét nghiệm**:\n  - Tiểu cầu giảm mạnh từ N6 (15.0 K/uL) đến N7 (70.0 K/uL), tăng 367%.\n  - HCT giảm từ N6 (31.7%) đến N7 (30.0%), giảm 5%.\n  - Bạch cầu tăng từ N6 (3.4 K/uL) đến N7 (13.3 K/uL), tăng 297%.\n\n### Khuyến nghị:\n- **Theo dõi sát**: Cần theo dõi chặt chẽ HCT, PLT và các dấu cảnh báo khác.\n- **Khám lại sớm**: Nếu có bất kỳ thay đổi đáng lo ngại nào, bệnh nhân nên được khám lại ngay lập tức.\n\n---\n⚠️ **Lưu ý**: Đây không phải quyết định cuối cùng. Hãy đến cơ sở y tế gần nhất để được bác sĩ thăm khám và tư vấn trực tiếp.",
+      "timestamp": "2026-05-04T17:44:01.098836+00:00"
+    }
+  ]
+}

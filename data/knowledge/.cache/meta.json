@@ -1,0 +1,7 @@
+{
+  "version": "v1",
+  "embedder": "ollama",
+  "embedder_model": "nomic-embed-text",
+  "n_chunks": 1395,
+  "dim": 768
+}

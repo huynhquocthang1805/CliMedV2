@@ -1,0 +1,502 @@
+======================================================================
+TEST HOLDOUT — copy từng BN paste vào chatbox để test bot
+Tổng số BN: 30 | Class distribution: {'canhbao': np.int64(19), 'nang': np.int64(10), 'thuong': np.int64(1)}
+Focus days: N3-N7
+======================================================================
+
+--- Bệnh nhân #0 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 57 | Cân nặng (kg): 75.0 | Chiều cao (cm): 165.0
+Ngày bệnh lúc nhập viện: 3.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=1.6, N5=2.9, N6=4.6, N7=4.9
+  Tiểu cầu (K/uL): N3=—, N4=30.0, N5=9.0, N6=12.0, N7=22.0
+  Hct (%): N3=—, N4=42.2, N5=44.5, N6=46.9, N7=41.3
+  HFLC (%): N3=—, N4=—, N5=—, N6=0.6, N7=0.9
+  %HFLC: N3=—, N4=—, N5=—, N6=13.8, N7=18.2
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N4 30.0→N7 22.0 (Δ=-8.0, 27%; min N5=9.0, max N4=30.0)
+  • HCT giảm N4 42.2→N7 41.3 (Δ=-0.9, 2%; min N7=41.3, max N6=46.9)
+  • BACHCAU tăng N4 1.6→N7 4.9 (Δ=+3.3, 210%; min N4=1.6, max N7=4.9)
+
+--- Bệnh nhân #1 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 21 | Cân nặng (kg): 85.0 | Chiều cao (cm): 160.0
+Ngày bệnh lúc nhập viện: 3.0
+Triệu chứng (+): nôn ói, đau cơ
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=4.4, N4=4.0, N5=4.8, N6=4.8, N7=7.3
+  Tiểu cầu (K/uL): N3=96.0, N4=73.0, N5=41.0, N6=22.0, N7=20.0
+  Hct (%): N3=36.1, N4=39.2, N5=37.7, N6=40.5, N7=40.5
+  HFLC (%): N3=—, N4=—, N5=0.1, N6=0.5, N7=0.9
+  %HFLC: N3=—, N4=—, N5=2.5, N6=10.7, N7=12.7
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 96.0→N7 20.0 (Δ=-76.0, 79%; min N7=20.0, max N3=96.0)
+  • HCT tăng N3 36.1→N7 40.5 (Δ=+4.4, 12%; min N3=36.1, max N6=40.5)
+  • BACHCAU tăng N3 4.4→N7 7.3 (Δ=+2.9, 65%; min N4=4.0, max N7=7.3)
+Lab khác: AST=19.0, ALT=11.0, Creatinin=57.0
+
+--- Bệnh nhân #2 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 6 | Cân nặng (kg): 17.0 | Chiều cao (cm): 100.0
+Ngày bệnh lúc nhập viện: 6.0
+Triệu chứng (+): nôn ói, đau bụng, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=—, N6=3.4, N7=13.3
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=—, N6=15.0, N7=70.0
+  Hct (%): N3=—, N4=—, N5=—, N6=31.7, N7=30.0
+  HFLC (%): N3=—, N4=—, N5=—, N6=0.8, N7=2.1
+  %HFLC: N3=—, N4=—, N5=—, N6=23.3, N7=15.2
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N6 15.0→N7 70.0 (Δ=+55.0, 367%; min N6=15.0, max N7=70.0)
+  • HCT giảm N6 31.7→N7 30.0 (Δ=-1.7, 5%; min N7=30.0, max N6=31.7)
+  • BACHCAU tăng N6 3.4→N7 13.3 (Δ=+10.0, 297%; min N6=3.4, max N7=13.3)
+Lab khác: AST=2119.0, ALT=581.0, Creatinin=79.0
+
+--- Bệnh nhân #3 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 11 | Cân nặng (kg): 46.0 | Chiều cao (cm): 149.0
+Ngày bệnh lúc nhập viện: 3.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=2.4, N4=2.0, N5=1.7, N6=1.9, N7=2.6
+  Tiểu cầu (K/uL): N3=138.0, N4=134.0, N5=133.0, N6=134.0, N7=128.0
+  Hct (%): N3=37.5, N4=37.8, N5=39.4, N6=41.7, N7=42.7
+  HFLC (%): N3=0.0, N4=0.0, N5=0.0, N6=0.1, N7=0.3
+  %HFLC: N3=0.0, N4=0.0, N5=1.2, N6=4.2, N7=10.7
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 138.0→N7 128.0 (Δ=-10.0, 7%; min N7=128.0, max N3=138.0)
+  • HCT tăng N3 37.5→N7 42.7 (Δ=+5.2, 14%; min N3=37.5, max N7=42.7)
+  • BACHCAU tăng N3 2.4→N7 2.6 (Δ=+0.2, 9%; min N5=1.7, max N7=2.6)
+
+--- Bệnh nhân #4 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 1 | Cân nặng (kg): 53.0 | Chiều cao (cm): 154.0
+Ngày bệnh lúc nhập viện: 4.0
+Triệu chứng (+): đau cơ, đau đầu, xuất huyết, gan to, petechia, tiền căn SXH
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=5.7, N5=7.6, N6=13.1, N7=9.2
+  Tiểu cầu (K/uL): N3=—, N4=46.0, N5=32.0, N6=20.0, N7=28.0
+  Hct (%): N3=—, N4=45.6, N5=41.3, N6=41.9, N7=44.2
+  HFLC (%): N3=—, N4=—, N5=2.1, N6=2.7, N7=—
+  %HFLC: N3=—, N4=—, N5=27.2, N6=20.9, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N4 46.0→N7 28.0 (Δ=-18.0, 39%; min N6=20.0, max N4=46.0)
+  • HCT giảm N4 45.6→N7 44.2 (Δ=-1.4, 3%; min N5=41.3, max N4=45.6)
+  • BACHCAU tăng N4 5.7→N7 9.2 (Δ=+3.5, 61%; min N4=5.7, max N6=13.1)
+Lab khác: Albumin=27.6, TQphantram=71.0, Fibrinogen=2.0, TCKgiay=49.3
+
+--- Bệnh nhân #5 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 18 | Cân nặng (kg): 56.0 | Chiều cao (cm): 173.0
+Ngày bệnh lúc nhập viện: 4.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=2.5, N5=2.1, N6=2.2, N7=4.1
+  Tiểu cầu (K/uL): N3=—, N4=91.0, N5=98.0, N6=73.0, N7=56.0
+  Hct (%): N3=—, N4=46.7, N5=46.9, N6=47.0, N7=47.6
+  HFLC (%): N3=—, N4=—, N5=0.0, N6=0.2, N7=0.5
+  %HFLC: N3=—, N4=—, N5=1.9, N6=7.3, N7=12.4
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N4 91.0→N7 56.0 (Δ=-35.0, 38%; min N7=56.0, max N5=98.0)
+  • HCT tăng N4 46.7→N7 47.6 (Δ=+0.9, 2%; min N4=46.7, max N7=47.6)
+  • BACHCAU tăng N4 2.5→N7 4.1 (Δ=+1.6, 63%; min N5=2.1, max N7=4.1)
+Lab khác: AST=27.0, ALT=22.0, Creatinin=93.0
+
+--- Bệnh nhân #6 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 16 | Cân nặng (kg): 62.0 | Chiều cao (cm): 155.0
+Ngày bệnh lúc nhập viện: 6.0
+Triệu chứng (+): xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=3.2, N4=3.0, N5=2.6, N6=3.2, N7=3.0
+  Tiểu cầu (K/uL): N3=122.0, N4=108.0, N5=77.0, N6=44.0, N7=32.0
+  Hct (%): N3=35.9, N4=37.2, N5=36.7, N6=37.7, N7=41.5
+  HFLC (%): N3=0.0, N4=0.0, N5=0.0, N6=0.2, N7=0.5
+  %HFLC: N3=0.9, N4=0.3, N5=0.8, N6=5.0, N7=16.8
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 122.0→N7 32.0 (Δ=-90.0, 74%; min N7=32.0, max N3=122.0)
+  • HCT tăng N3 35.9→N7 41.5 (Δ=+5.6, 16%; min N3=35.9, max N7=41.5)
+  • BACHCAU giảm N3 3.2→N7 3.0 (Δ=-0.2, 6%; min N5=2.6, max N6=3.2)
+Lab khác: AST=82.0, ALT=20.0
+
+--- Bệnh nhân #7 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 36 | Cân nặng (kg): 60.0 | Chiều cao (cm): 160.0
+Ngày bệnh lúc nhập viện: 5.0
+Triệu chứng (+): đau bụng, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=7.1, N6=9.3, N7=12.2
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=9.0, N6=5.0, N7=10.0
+  Hct (%): N3=—, N4=—, N5=54.2, N6=51.4, N7=49.2
+  HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=—
+  %HFLC: N3=—, N4=—, N5=—, N6=—, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N5 9.0→N7 10.0 (Δ=+1.0, 11%; min N6=5.0, max N7=10.0)
+  • HCT giảm N5 54.2→N7 49.2 (Δ=-5.0, 9%; min N7=49.2, max N5=54.2)
+  • BACHCAU tăng N5 7.1→N7 12.2 (Δ=+5.1, 71%; min N5=7.1, max N7=12.2)
+Lab khác: AST=124.0, ALT=76.0, Creatinin=101.0
+
+--- Bệnh nhân #8 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 9 | Cân nặng (kg): 22.0 | Chiều cao (cm): 127.0
+Ngày bệnh lúc nhập viện: 6.0
+Triệu chứng (+): nôn ói, đau bụng
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=1.5, N6=3.4, N7=11.7
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=89.0, N6=31.0, N7=17.0
+  Hct (%): N3=—, N4=—, N5=37.6, N6=46.1, N7=41.4
+  HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=—
+  %HFLC: N3=—, N4=—, N5=—, N6=—, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N5 89.0→N7 17.0 (Δ=-72.0, 81%; min N7=17.0, max N5=89.0)
+  • HCT tăng N5 37.6→N7 41.4 (Δ=+3.8, 10%; min N5=37.6, max N6=46.1)
+  • BACHCAU tăng N5 1.5→N7 11.7 (Δ=+10.2, 694%; min N5=1.5, max N7=11.7)
+Lab khác: AST=2774.0, ALT=1129.0, Creatinin=68.0
+
+--- Bệnh nhân #9 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 21 | Cân nặng (kg): 40.0 | Chiều cao (cm): 157.0
+Ngày bệnh lúc nhập viện: 5.0
+Triệu chứng (+): đau bụng
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=1.3, N6=3.5, N7=6.2
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=43.0, N6=28.0, N7=27.0
+  Hct (%): N3=—, N4=—, N5=51.8, N6=48.6, N7=42.7
+  HFLC (%): N3=—, N4=—, N5=—, N6=0.7, N7=1.9
+  %HFLC: N3=—, N4=—, N5=—, N6=20.9, N7=30.7
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N5 43.0→N7 27.0 (Δ=-16.0, 37%; min N7=27.0, max N5=43.0)
+  • HCT giảm N5 51.8→N7 42.7 (Δ=-9.1, 18%; min N7=42.7, max N5=51.8)
+  • BACHCAU tăng N5 1.3→N7 6.2 (Δ=+4.9, 385%; min N5=1.3, max N7=6.2)
+Lab khác: AST=330.0, ALT=73.0, Creatinin=60.0
+
+--- Bệnh nhân #10 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 12 | Cân nặng (kg): 71.0 | Chiều cao (cm): 164.0
+Ngày bệnh lúc nhập viện: 6.0
+Triệu chứng (+): nôn ói, đau bụng, ho, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=—, N6=1.5, N7=1.3
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=—, N6=85.0, N7=69.0
+  Hct (%): N3=—, N4=—, N5=—, N6=40.2, N7=43.4
+  HFLC (%): N3=—, N4=—, N5=—, N6=0.0, N7=0.1
+  %HFLC: N3=—, N4=—, N5=—, N6=2.0, N7=5.4
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N6 85.0→N7 69.0 (Δ=-16.0, 19%; min N7=69.0, max N6=85.0)
+  • HCT tăng N6 40.2→N7 43.4 (Δ=+3.2, 8%; min N6=40.2, max N7=43.4)
+  • BACHCAU giảm N6 1.5→N7 1.3 (Δ=-0.2, 14%; min N7=1.3, max N6=1.5)
+
+--- Bệnh nhân #11 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 16 | Cân nặng (kg): 86.0 | Chiều cao (cm): 170.0
+Ngày bệnh lúc nhập viện: 2.0
+Triệu chứng (+): đau cơ, ho
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=4.0, N4=2.8, N5=2.2, N6=2.4, N7=3.9
+  Tiểu cầu (K/uL): N3=190.0, N4=155.0, N5=136.0, N6=146.0, N7=114.0
+  Hct (%): N3=44.8, N4=47.6, N5=49.6, N6=49.3, N7=48.4
+  HFLC (%): N3=0.0, N4=0.0, N5=0.0, N6=0.1, N7=0.3
+  %HFLC: N3=0.3, N4=0.4, N5=0.4, N6=3.4, N7=7.5
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 190.0→N7 114.0 (Δ=-76.0, 40%; min N7=114.0, max N3=190.0)
+  • HCT tăng N3 44.8→N7 48.4 (Δ=+3.6, 8%; min N3=44.8, max N5=49.6)
+  • BACHCAU giảm N3 4.0→N7 3.9 (Δ=-0.1, 3%; min N5=2.2, max N3=4.0)
+Lab khác: AST=18.0, ALT=15.0, Creatinin=82.0
+
+--- Bệnh nhân #12 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 13 | Cân nặng (kg): 55.0 | Chiều cao (cm): 153.0
+Ngày bệnh lúc nhập viện: 4.0
+Triệu chứng (+): nôn ói, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=3.8, N5=3.0, N6=4.0, N7=—
+  Tiểu cầu (K/uL): N3=—, N4=126.0, N5=92.0, N6=75.0, N7=—
+  Hct (%): N3=—, N4=42.3, N5=41.7, N6=43.1, N7=—
+  HFLC (%): N3=—, N4=0.0, N5=0.1, N6=0.3, N7=—
+  %HFLC: N3=—, N4=0.5, N5=2.3, N6=8.0, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N4 126.0→N6 75.0 (Δ=-51.0, 40%; min N6=75.0, max N4=126.0)
+  • HCT tăng N4 42.3→N6 43.1 (Δ=+0.8, 2%; min N5=41.7, max N6=43.1)
+  • BACHCAU tăng N4 3.8→N6 4.0 (Δ=+0.2, 6%; min N5=3.0, max N6=4.0)
+Lab khác: AST=46.0, ALT=20.0
+
+--- Bệnh nhân #13 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 47 | Cân nặng (kg): 65.0 | Chiều cao (cm): 168.0
+Ngày bệnh lúc nhập viện: 3.0
+Triệu chứng (+): nôn ói, đau bụng
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=4.0, N4=3.0, N5=4.2, N6=5.2, N7=6.7
+  Tiểu cầu (K/uL): N3=67.0, N4=10.0, N5=7.0, N6=9.0, N7=25.0
+  Hct (%): N3=44.9, N4=46.8, N5=46.1, N6=46.2, N7=42.8
+  HFLC (%): N3=0.0, N4=0.2, N5=0.6, N6=0.9, N7=1.2
+  %HFLC: N3=0.8, N4=5.6, N5=15.0, N6=17.5, N7=18.0
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 67.0→N7 25.0 (Δ=-42.0, 63%; min N5=7.0, max N3=67.0)
+  • HCT giảm N3 44.9→N7 42.8 (Δ=-2.1, 5%; min N7=42.8, max N4=46.8)
+  • BACHCAU tăng N3 4.0→N7 6.7 (Δ=+2.8, 71%; min N4=3.0, max N7=6.7)
+Lab khác: AST=92.0, ALT=71.0, Creatinin=95.0
+
+--- Bệnh nhân #14 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 16 | Cân nặng (kg): 85.0 | Chiều cao (cm): 180.0
+Ngày bệnh lúc nhập viện: 5.0
+Triệu chứng (+): đau bụng, đau đầu, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=5.0, N6=5.0, N7=8.7
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=18.0, N6=18.0, N7=20.0
+  Hct (%): N3=—, N4=—, N5=61.2, N6=45.8, N7=44.6
+  HFLC (%): N3=—, N4=—, N5=—, N6=0.9, N7=1.6
+  %HFLC: N3=—, N4=—, N5=—, N6=18.6, N7=18.0
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N5 18.0→N7 20.0 (Δ=+2.0, 11%; min N5=18.0, max N7=20.0)
+  • HCT giảm N5 61.2→N7 44.6 (Δ=-16.6, 27%; min N7=44.6, max N5=61.2)
+  • BACHCAU tăng N5 5.0→N7 8.7 (Δ=+3.7, 73%; min N5=5.0, max N7=8.7)
+Lab khác: AST=324.0, ALT=210.0, Creatinin=111.0
+
+--- Bệnh nhân #15 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 19 | Cân nặng (kg): 79.0 | Chiều cao (cm): 160.0
+Ngày bệnh lúc nhập viện: 3.0
+Triệu chứng (+): nôn ói, đau đầu
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=3.2, N5=4.0, N6=4.6, N7=5.8
+  Tiểu cầu (K/uL): N3=—, N4=38.0, N5=17.0, N6=24.0, N7=52.0
+  Hct (%): N3=—, N4=41.9, N5=43.9, N6=43.3, N7=40.8
+  HFLC (%): N3=—, N4=0.0, N5=0.1, N6=0.5, N7=1.5
+  %HFLC: N3=—, N4=0.0, N5=1.7, N6=11.7, N7=25.0
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N4 38.0→N7 52.0 (Δ=+14.0, 37%; min N5=17.0, max N7=52.0)
+  • HCT giảm N4 41.9→N7 40.8 (Δ=-1.1, 3%; min N7=40.8, max N5=43.9)
+  • BACHCAU tăng N4 3.2→N7 5.8 (Δ=+2.6, 81%; min N4=3.2, max N7=5.8)
+Lab khác: AST=160.0, ALT=85.0, Creatinin=50.0
+
+--- Bệnh nhân #16 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 35 | Cân nặng (kg): 73.0 | Chiều cao (cm): 171.0
+Ngày bệnh lúc nhập viện: 4.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=2.0, N5=1.8, N6=3.5, N7=5.2
+  Tiểu cầu (K/uL): N3=—, N4=43.0, N5=26.0, N6=11.0, N7=10.0
+  Hct (%): N3=—, N4=45.2, N5=44.4, N6=47.3, N7=45.7
+  HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=1.2
+  %HFLC: N3=—, N4=—, N5=—, N6=—, N7=22.4
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N4 43.0→N7 10.0 (Δ=-33.0, 77%; min N7=10.0, max N4=43.0)
+  • HCT tăng N4 45.2→N7 45.7 (Δ=+0.5, 1%; min N5=44.4, max N6=47.3)
+  • BACHCAU tăng N4 2.0→N7 5.2 (Δ=+3.2, 163%; min N5=1.8, max N7=5.2)
+Lab khác: AST=86.0, ALT=32.0, Creatinin=108.0
+
+--- Bệnh nhân #17 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 30 | Cân nặng (kg): 58.0 | Chiều cao (cm): 158.0
+Ngày bệnh lúc nhập viện: 5.0
+Triệu chứng (+): nôn ói, đau cơ, ho, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=3.9, N6=5.0, N7=7.7
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=104.0, N6=56.0, N7=31.0
+  Hct (%): N3=—, N4=—, N5=34.7, N6=39.7, N7=37.1
+  HFLC (%): N3=—, N4=—, N5=0.1, N6=0.6, N7=0.0
+  %HFLC: N3=—, N4=—, N5=2.5, N6=11.5, N7=0.1
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N5 104.0→N7 31.0 (Δ=-73.0, 70%; min N7=31.0, max N5=104.0)
+  • HCT tăng N5 34.7→N7 37.1 (Δ=+2.4, 7%; min N5=34.7, max N6=39.7)
+  • BACHCAU tăng N5 3.9→N7 7.7 (Δ=+3.7, 95%; min N5=3.9, max N7=7.7)
+Lab khác: AST=75.0, ALT=37.0, Creatinin=76.0
+
+--- Bệnh nhân #18 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 17 | Cân nặng (kg): 48.0 | Chiều cao (cm): 153.0
+Ngày bệnh lúc nhập viện: 6.0
+Triệu chứng (+): đau đầu, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=—, N6=4.5, N7=4.3
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=—, N6=22.0, N7=18.0
+  Hct (%): N3=—, N4=—, N5=—, N6=49.2, N7=41.0
+  HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=0.4
+  %HFLC: N3=—, N4=—, N5=—, N6=—, N7=9.8
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N6 22.0→N7 18.0 (Δ=-4.0, 18%; min N7=18.0, max N6=22.0)
+  • HCT giảm N6 49.2→N7 41.0 (Δ=-8.2, 17%; min N7=41.0, max N6=49.2)
+  • BACHCAU giảm N6 4.5→N7 4.3 (Δ=-0.2, 6%; min N7=4.3, max N6=4.5)
+Lab khác: AST=365.0, ALT=227.0, Creatinin=94.0
+
+--- Bệnh nhân #19 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 16 | Cân nặng (kg): 72.0 | Chiều cao (cm): 170.0
+Ngày bệnh lúc nhập viện: 6.0
+Triệu chứng (+): đau cơ, đau đầu, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=—, N6=2.2, N7=2.5
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=—, N6=44.0, N7=38.0
+  Hct (%): N3=—, N4=—, N5=—, N6=42.3, N7=45.2
+  HFLC (%): N3=—, N4=—, N5=—, N6=0.1, N7=0.1
+  %HFLC: N3=—, N4=—, N5=—, N6=2.7, N7=4.9
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N6 44.0→N7 38.0 (Δ=-6.0, 14%; min N7=38.0, max N6=44.0)
+  • HCT tăng N6 42.3→N7 45.2 (Δ=+2.9, 7%; min N6=42.3, max N7=45.2)
+  • BACHCAU tăng N6 2.2→N7 2.5 (Δ=+0.2, 10%; min N6=2.2, max N7=2.5)
+Lab khác: AST=160.0, ALT=70.0, Creatinin=79.0
+
+--- Bệnh nhân #20 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 13 | Cân nặng (kg): 56.0 | Chiều cao (cm): 163.0
+Ngày bệnh lúc nhập viện: 5.0
+Triệu chứng (+): nôn ói, đau bụng, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=1.6, N4=1.7, N5=1.9, N6=3.3, N7=—
+  Tiểu cầu (K/uL): N3=145.0, N4=119.0, N5=100.0, N6=101.0, N7=—
+  Hct (%): N3=47.6, N4=47.4, N5=47.0, N6=47.7, N7=—
+  HFLC (%): N3=0.0, N4=0.0, N5=0.2, N6=0.6, N7=—
+  %HFLC: N3=0.6, N4=1.2, N5=9.6, N6=18.0, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 145.0→N6 101.0 (Δ=-44.0, 30%; min N5=100.0, max N3=145.0)
+  • HCT tăng N3 47.6→N6 47.7 (Δ=+0.1, 0%; min N5=47.0, max N6=47.7)
+  • BACHCAU tăng N3 1.6→N6 3.3 (Δ=+1.6, 98%; min N3=1.6, max N6=3.3)
+
+--- Bệnh nhân #21 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 2 | Cân nặng (kg): 6.0 | Chiều cao (cm): 62.0
+Ngày bệnh lúc nhập viện: 2.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=3.8, N4=3.3, N5=3.1, N6=2.5, N7=3.9
+  Tiểu cầu (K/uL): N3=79.0, N4=38.0, N5=7.0, N6=9.0, N7=9.0
+  Hct (%): N3=38.1, N4=38.8, N5=32.1, N6=30.5, N7=29.6
+  HFLC (%): N3=—, N4=0.1, N5=0.1, N6=0.1, N7=0.0
+  %HFLC: N3=—, N4=1.5, N5=3.2, N6=5.1, N7=0.0
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 79.0→N7 9.0 (Δ=-70.0, 89%; min N5=7.0, max N3=79.0)
+  • HCT giảm N3 38.1→N7 29.6 (Δ=-8.5, 22%; min N7=29.6, max N4=38.8)
+  • BACHCAU tăng N3 3.8→N7 3.9 (Δ=+0.1, 4%; min N6=2.5, max N7=3.9)
+
+--- Bệnh nhân #22 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 26 | Cân nặng (kg): 65.0 | Chiều cao (cm): 168.0
+Ngày bệnh lúc nhập viện: 3.0
+Triệu chứng (+): đau bụng, xuất huyết
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=4.4, N4=2.7, N5=5.3, N6=6.0, N7=8.2
+  Tiểu cầu (K/uL): N3=197.0, N4=100.0, N5=148.0, N6=159.0, N7=223.0
+  Hct (%): N3=45.8, N4=58.3, N5=46.0, N6=46.1, N7=46.9
+  HFLC (%): N3=0.1, N4=0.1, N5=0.4, N6=0.5, N7=0.7
+  %HFLC: N3=1.6, N4=5.2, N5=7.7, N6=8.0, N7=8.0
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N3 197.0→N7 223.0 (Δ=+26.0, 13%; min N4=100.0, max N7=223.0)
+  • HCT tăng N3 45.8→N7 46.9 (Δ=+1.1, 2%; min N3=45.8, max N4=58.3)
+  • BACHCAU tăng N3 4.4→N7 8.2 (Δ=+3.8, 86%; min N4=2.7, max N7=8.2)
+Lab khác: AST=41.0, ALT=32.0, Creatinin=79.0
+
+--- Bệnh nhân #23 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 29 | Cân nặng (kg): 52.0 | Chiều cao (cm): 173.0
+Ngày bệnh lúc nhập viện: 4.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=1.8, N5=1.5, N6=1.6, N7=2.9
+  Tiểu cầu (K/uL): N3=—, N4=72.0, N5=79.0, N6=63.0, N7=61.0
+  Hct (%): N3=—, N4=42.5, N5=43.7, N6=44.7, N7=45.5
+  HFLC (%): N3=—, N4=—, N5=0.0, N6=0.1, N7=0.3
+  %HFLC: N3=—, N4=—, N5=1.3, N6=3.1, N7=9.7
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N4 72.0→N7 61.0 (Δ=-11.0, 15%; min N7=61.0, max N5=79.0)
+  • HCT tăng N4 42.5→N7 45.5 (Δ=+3.0, 7%; min N4=42.5, max N7=45.5)
+  • BACHCAU tăng N4 1.8→N7 2.9 (Δ=+1.1, 61%; min N5=1.5, max N7=2.9)
+Lab khác: AST=67.0, ALT=43.0, Creatinin=68.0
+
+--- Bệnh nhân #24 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 34 | Cân nặng (kg): 100.0 | Chiều cao (cm): 177.0
+Ngày bệnh lúc nhập viện: 3.0
+Triệu chứng (+): đau cơ, xuất huyết, tiền căn SXH
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=3.4, N4=2.5, N5=2.6, N6=5.2, N7=5.0
+  Tiểu cầu (K/uL): N3=83.0, N4=42.0, N5=16.0, N6=19.0, N7=40.0
+  Hct (%): N3=46.6, N4=50.6, N5=51.8, N6=52.3, N7=46.9
+  HFLC (%): N3=0.0, N4=0.0, N5=0.1, N6=0.6, N7=—
+  %HFLC: N3=0.0, N4=1.2, N5=2.3, N6=10.9, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 83.0→N7 40.0 (Δ=-43.0, 52%; min N5=16.0, max N3=83.0)
+  • HCT tăng N3 46.6→N7 46.9 (Δ=+0.3, 1%; min N3=46.6, max N6=52.3)
+  • BACHCAU tăng N3 3.4→N7 5.0 (Δ=+1.6, 47%; min N4=2.5, max N6=5.2)
+Lab khác: AST=189.0, ALT=176.0, Creatinin=108.0
+
+--- Bệnh nhân #25 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 29 | Cân nặng (kg): 73.0 | Chiều cao (cm): 168.0
+Ngày bệnh lúc nhập viện: 4.0
+Triệu chứng (+): đau cơ, đau đầu, tiền căn SXH
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=4.0, N4=2.1, N5=2.2, N6=5.0, N7=5.9
+  Tiểu cầu (K/uL): N3=69.0, N4=35.0, N5=24.0, N6=8.0, N7=15.0
+  Hct (%): N3=42.0, N4=43.9, N5=44.9, N6=48.9, N7=43.0
+  HFLC (%): N3=0.0, N4=0.0, N5=0.1, N6=1.1, N7=1.7
+  %HFLC: N3=1.0, N4=0.5, N5=3.2, N6=21.2, N7=29.7
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 69.0→N7 15.0 (Δ=-54.0, 78%; min N6=8.0, max N3=69.0)
+  • HCT tăng N3 42.0→N7 43.0 (Δ=+1.0, 2%; min N3=42.0, max N6=48.9)
+  • BACHCAU tăng N3 4.0→N7 5.9 (Δ=+1.8, 45%; min N4=2.1, max N7=5.9)
+Lab khác: AST=96.0, ALT=83.0, Creatinin=111.0
+
+--- Bệnh nhân #26 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 14 | Cân nặng (kg): 57.0 | Chiều cao (cm): 165.0
+Ngày bệnh lúc nhập viện: 4.0
+Triệu chứng (+): nôn ói, đau bụng, đau cơ, đau đầu, xuất huyết, gan to
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=3.1, N5=4.2, N6=4.2, N7=6.3
+  Tiểu cầu (K/uL): N3=—, N4=12.0, N5=7.0, N6=26.0, N7=28.0
+  Hct (%): N3=—, N4=50.0, N5=49.2, N6=40.5, N7=38.0
+  HFLC (%): N3=—, N4=—, N5=0.3, N6=0.7, N7=1.8
+  %HFLC: N3=—, N4=—, N5=6.9, N6=16.1, N7=29.0
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N4 12.0→N7 28.0 (Δ=+16.0, 133%; min N5=7.0, max N7=28.0)
+  • HCT giảm N4 50.0→N7 38.0 (Δ=-12.0, 24%; min N7=38.0, max N4=50.0)
+  • BACHCAU tăng N4 3.1→N7 6.3 (Δ=+3.2, 105%; min N4=3.1, max N7=6.3)
+Lab khác: AST=84.0, ALT=36.0, Creatinin=82.0
+
+--- Bệnh nhân #27 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 7 | Cân nặng (kg): 17.0 | Chiều cao (cm): 112.0
+Ngày bệnh lúc nhập viện: 4.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=—, N5=3.0, N6=4.9, N7=5.2
+  Tiểu cầu (K/uL): N3=—, N4=—, N5=45.0, N6=32.0, N7=43.0
+  Hct (%): N3=—, N4=—, N5=42.2, N6=38.2, N7=34.6
+  HFLC (%): N3=—, N4=—, N5=—, N6=—, N7=0.9
+  %HFLC: N3=—, N4=—, N5=—, N6=—, N7=17.0
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N5 45.0→N7 43.0 (Δ=-2.0, 4%; min N6=32.0, max N5=45.0)
+  • HCT giảm N5 42.2→N7 34.6 (Δ=-7.6, 18%; min N7=34.6, max N5=42.2)
+  • BACHCAU tăng N5 3.0→N7 5.2 (Δ=+2.1, 70%; min N5=3.0, max N7=5.2)
+Lab khác: AST=66.0, ALT=15.0, Creatinin=31.0
+
+--- Bệnh nhân #28 (test holdout) ---
+Thông tin: Giới tính: nữ | Tuổi: 26 | Cân nặng (kg): 50.5 | Chiều cao (cm): 144.0
+Ngày bệnh lúc nhập viện: 4.0
+Triệu chứng (+): nôn ói, đau bụng, xuất huyết, gan to
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=—, N4=3.7, N5=3.2, N6=4.7, N7=4.8
+  Tiểu cầu (K/uL): N3=—, N4=21.0, N5=15.0, N6=6.0, N7=27.0
+  Hct (%): N3=—, N4=49.7, N5=45.0, N6=41.6, N7=44.9
+  HFLC (%): N3=—, N4=—, N5=0.7, N6=0.9, N7=—
+  %HFLC: N3=—, N4=—, N5=22.2, N6=19.1, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU tăng N4 21.0→N7 27.0 (Δ=+6.0, 29%; min N6=6.0, max N7=27.0)
+  • HCT giảm N4 49.7→N7 44.9 (Δ=-4.8, 10%; min N6=41.6, max N4=49.7)
+  • BACHCAU tăng N4 3.7→N7 4.8 (Δ=+1.1, 31%; min N5=3.2, max N7=4.8)
+Lab khác: AST=82.0, ALT=31.0, Creatinin=66.0
+
+--- Bệnh nhân #29 (test holdout) ---
+Thông tin: Giới tính: nam | Tuổi: 43 | Cân nặng (kg): 80.0 | Chiều cao (cm): 168.0
+Ngày bệnh lúc nhập viện: 2.0
+Lab theo ngày (N3-N7 — giai đoạn giữa):
+   Trong đó N3-N7 là giai đoạn nguy hiểm (có thể sốc nặng).
+  Bạch cầu (K/uL): N3=2.8, N4=2.2, N5=2.4, N6=3.5, N7=4.1
+  Tiểu cầu (K/uL): N3=71.0, N4=52.0, N5=44.0, N6=35.0, N7=56.0
+  Hct (%): N3=44.6, N4=47.6, N5=47.6, N6=54.0, N7=46.9
+  HFLC (%): N3=0.0, N4=0.0, N5=0.1, N6=—, N7=—
+  %HFLC: N3=1.1, N4=0.9, N5=4.6, N6=—, N7=—
+Xu hướng (trong focus window):
+  • TIEUCAU giảm N3 71.0→N7 56.0 (Δ=-15.0, 21%; min N6=35.0, max N3=71.0)
+  • HCT tăng N3 44.6→N7 46.9 (Δ=+2.3, 5%; min N3=44.6, max N6=54.0)
+  • BACHCAU tăng N3 2.8→N7 4.1 (Δ=+1.3, 45%; min N4=2.2, max N7=4.1)
+Lab khác: AST=28.0, ALT=19.0, Creatinin=114.0

@@ -1,0 +1,262 @@
+# ============================================================================
+# graph_seed.yaml — TỰ ĐỘNG SINH RA bởi build_graph_from_guideline.py
+# ============================================================================
+# Generated at: 2026-05-04T15:46:09.767715+00:00
+# Source PDF:   Huong-dan-chan-doan-va-dieu-tri(1).pdf
+# Pages scanned: 19
+#
+# Pipeline:
+#   1. Đọc PDF guideline (Bộ Y tế VN, BV Bệnh Nhiệt Đới 2023).
+#   2. Tìm chương SXHD bằng keyword density.
+#   3. Pattern-match các concept (regex) đã định nghĩa trong
+#      build_graph_from_guideline.py (severity, symptom, warning,
+#      lab, drug, intervention).
+#   4. Mỗi node có field `source_pages` ghi rõ trang PDF đã match.
+#   5. Ghi YAML có comment để bác sĩ audit.
+#
+# RE-GENERATE:
+#   python src/build_graph_from_guideline.py
+# ============================================================================
+
+nodes:
+  - id: sxhd_thuong
+    type: severity
+    label: "SXHD thông thường"
+    description: "Sốt + ≥2 dấu hiệu (đau đầu, đau cơ-khớp, đau hốc mắt, ban xuất huyết). Chưa có cảnh báo."
+
+  - id: sxhd_canh_bao
+    type: severity
+    label: "SXHD có dấu hiệu cảnh báo"
+    description: "Có ≥1 warning sign — cần nhập viện theo dõi sát."
+    source_pages: [209, 211, 218, 220, 221]
+    evidence_snippet: "c chia làm 3 mức độ (theo Tổ chức Y tế thế giới năm 2009) - Sốt xuất huyết Dengue. - Sốt xuất huyết [Dengue có dấu hiệu cảnh báo]. - Sốt xuất huyết Dengue nặng. ❖ Phụ lục 2: Phân độ sốt xuất huyết Dengue. Lưu ý: Trong quá trình d"
+
+  - id: sxhd_nang
+    type: severity
+    label: "SXHD nặng"
+    description: "Sốc, xuất huyết nặng, hoặc suy đa cơ quan."
+    source_pages: [209, 211, 212, 214, 218, 220, 221, 222, 223, 224, 225]
+    evidence_snippet: "i năm 2009) - Sốt xuất huyết Dengue. - Sốt xuất huyết Dengue có dấu hiệu cảnh báo. - Sốt xuất huyết [Dengue nặng]. ❖ Phụ lục 2: Phân độ sốt xuất huyết Dengue. Lưu ý: Trong quá trình diễn biến, bệnh có thể chuyển t"
+
+  - id: sot_cao
+    type: symptom
+    label: "Sốt cao đột ngột"
+    source_pages: [207, 210, 216, 219]
+    evidence_snippet: "ớm, điều trị đúng và kịp thời, nhằm cứu sống người bệnh. 27.2.1. Giai đoạn sốt 27.2.1.1. Lâm sàng - [Sốt cao] đột ngột, liên tục. - Nhức đầu, chán ăn, buồn nôn. - Da sung huyết. - Đau cơ, đau khớp, nhức hai hố"
+
+  - id: dau_dau
+    type: symptom
+    label: "Đau đầu"
+    source_pages: [207, 216]
+    evidence_snippet: "nhằm cứu sống người bệnh. 27.2.1. Giai đoạn sốt 27.2.1.1. Lâm sàng - Sốt cao đột ngột, liên tục. - [Nhức đầu], chán ăn, buồn nôn. - Da sung huyết. - Đau cơ, đau khớp, nhức hai hố mắt. - Nghiệm pháp dây thắt dư"
+
+  - id: dau_co_khop
+    type: symptom
+    label: "Đau cơ / đau khớp"
+    source_pages: [207, 216]
+    evidence_snippet: "27.2.1.1. Lâm sàng - Sốt cao đột ngột, liên tục. - Nhức đầu, chán ăn, buồn nôn. - Da sung huyết. - [Đau cơ], đau khớp, nhức hai hố mắt. - Nghiệm pháp dây thắt dương tính. - Thường có chấm xuất huyết ở dưới d"
+
+  - id: dau_hoc_mat
+    type: symptom
+    label: "Đau sau hốc mắt"
+
+  - id: ban_xuat_huyet
+    type: symptom
+    label: "Ban xuất huyết / petechia"
+    source_pages: [207, 208, 216, 217]
+    evidence_snippet: "Da sung huyết. - Đau cơ, đau khớp, nhức hai hố mắt. - Nghiệm pháp dây thắt dương tính. - Thường có [chấm xuất huyết] ở dưới da, chảy máu chân răng hoặc chảy máu mũi. 27.2.1.2. Cận lâm sàng - Hematocrit (Hct) bình thư"
+
+  - id: da_niem_sung_huyet
+    type: symptom
+    label: "Da niêm sung huyết"
+    source_pages: [207, 216]
+    evidence_snippet: "Giai đoạn sốt 27.2.1.1. Lâm sàng - Sốt cao đột ngột, liên tục. - Nhức đầu, chán ăn, buồn nôn. - Da [sung huyết]. - Đau cơ, đau khớp, nhức hai hố mắt. - Nghiệm pháp dây thắt dương tính. - Thường có chấm xuất huyế"
+
+  - id: dau_bung_nhieu
+    type: warning_sign
+    label: "Đau bụng nhiều / liên tục"
+    source_pages: [207, 210, 216, 219, 220]
+    evidence_snippet: "h 27.2.2.1. Lâm sàng ❖ Người bệnh có thể còn sốt hoặc đã giảm sốt. ❖ Có thể có các biểu hiện sau: - [Đau bụng nhiều]: đau bụng nhiều và liên tục hoặc tăng cảm giác đau nhất là ở vùng gan. - Vật vã, lừ đừ, li bì. - Ga"
+
+  - id: non_nhieu
+    type: warning_sign
+    label: "Nôn nhiều"
+    source_pages: [210, 211, 219, 220]
+    evidence_snippet: "dấu hiệu sau + Người bệnh thấy khó chịu hơn mặc dù sốt giảm hoặc hết sốt. + Không ăn, uống được. + [Nôn ói nhiều]. + Đau bụng nhiều. + Tay chân lạnh, ẩm. + Mệt lả, bứt rứt. + Chảy máu mũi, miệng hoặc xuất huyết âm"
+
+  - id: chay_mau_niem_mac
+    type: warning_sign
+    label: "Chảy máu niêm mạc"
+    source_pages: [207, 208, 210, 216, 217, 219]
+    evidence_snippet: "au khớp, nhức hai hố mắt. - Nghiệm pháp dây thắt dương tính. - Thường có chấm xuất huyết ở dưới da, [chảy máu chân răng] hoặc chảy máu mũi. 27.2.1.2. Cận lâm sàng - Hematocrit (Hct) bình thường. - Số lượng tiểu cầu bình"
+
+  - id: gan_to
+    type: warning_sign
+    label: "Gan to >2cm"
+    source_pages: [207, 216]
+    evidence_snippet: "ều: đau bụng nhiều và liên tục hoặc tăng cảm giác đau nhất là ở vùng gan. - Vật vã, lừ đừ, li bì. - [Gan to > 2cm] dưới bờ sườn, có thể đau. 197"
+
+  - id: lu_du_vat_va
+    type: warning_sign
+    label: "Lừ đừ / vật vã / rối loạn ý thức"
+    source_pages: [207, 208, 211, 213, 216, 217, 220]
+    evidence_snippet: ": - Đau bụng nhiều: đau bụng nhiều và liên tục hoặc tăng cảm giác đau nhất là ở vùng gan. - Vật vã, [lừ đừ], li bì. - Gan to > 2cm dưới bờ sườn, có thể đau. 197"
+
+  - id: tieu_it
+    type: warning_sign
+    label: "Tiểu ít"
+    source_pages: [208, 213, 217]
+    evidence_snippet: "Hg hoặc tụt huyết áp, không đo được huyết áp, mạch không bắt được, da lạnh, nổi vân tím (sốc nặng), [tiểu ít]. - Xuất huyết: + Xuất huyết dưới da: Nốt xuất huyết rải rác hoặc chấm xuất huyết thường ở mặt trước"
+
+  - id: tay_chan_lanh
+    type: warning_sign
+    label: "Tay chân lạnh"
+    source_pages: [210, 219, 220]
+    evidence_snippet: "ó chịu hơn mặc dù sốt giảm hoặc hết sốt. + Không ăn, uống được. + Nôn ói nhiều. + Đau bụng nhiều. + [Tay chân lạnh], ẩm. + Mệt lả, bứt rứt. + Chảy máu mũi, miệng hoặc xuất huyết âm đạo. + Không tiểu trên 6 giờ. 200"
+
+  - id: hct_tang_plt_giam
+    type: warning_sign
+    label: "Hct tăng kèm tiểu cầu giảm nhanh"
+    source_pages: [208, 217]
+    evidence_snippet: "Viêm cơ tim, suy tim, hoặc suy chức năng các cơ quan khác. 27.2.2.2. Cận lâm sàng - Cô đặc máu khi [Hematocrit tăng > 20% so với giá trị ban đầu của người bệnh hoặc so với giá trị trung bình của dân số ở cùng lứa tuổi. - Ví dụ: Hct ban đầu là 35%, SXHD có tình trạng cô đặc máu khi Hct hiện tại đo đư"
+
+  - id: tran_dich
+    type: warning_sign
+    label: "Tràn dịch màng phổi / màng bụng"
+    source_pages: [208, 214, 217]
+    evidence_snippet: "- Nôn ói. - Biểu hiện thoát huyết tương do tăng tính thấm thành mạch (thường kéo dài 24-48 giờ): + [Tràn dịch màng phổi], mô kẽ (có thể gây suy hô hấp), màng bụng, phù nề mi mắt. + Nếu thoát huyết tương nhiều sẽ dẫn đến"
+
+  - id: tieu_cau_thap
+    type: lab
+    label: "Tiểu cầu giảm"
+    threshold: "PLT < 100 K/uL"
+    source_pages: [208, 217]
+    evidence_snippet: "SXHD có tình trạng cô đặc máu khi Hct hiện tại đo được là 42% (tăng 20% so với ban đầu). - Số lượng [tiểu cầu giảm] (<100.000/mm3). - AST, ALT thường tăng. - Trường hợp nặng có thể có rối loạn đông máu. - Siêu âm ho"
+
+  - id: hct_cao
+    type: lab
+    label: "Hct tăng"
+    threshold: "Hct tăng ≥20% so với baseline"
+    source_pages: [208, 212, 217]
+    evidence_snippet: "Viêm cơ tim, suy tim, hoặc suy chức năng các cơ quan khác. 27.2.2.2. Cận lâm sàng - Cô đặc máu khi [Hematocrit tăng] > 20% so với giá trị ban đầu của người bệnh hoặc so với giá trị trung bình của dân số ở cùng lứa tu"
+
+  - id: ast_alt_cao
+    type: lab
+    label: "Men gan tăng"
+    threshold: "AST/ALT > 2× ULN"
+    source_pages: [208, 212, 213, 214, 217, 221]
+    evidence_snippet: "ền sử loét dạ dày-tá tràng, viêm gan mạn. - Một số trường hợp nặng có thể có biểu hiện suy tạng như [tổn thương gan] nặng/suy gan, thận, tim, phổi, não. Những biểu hiện nặng này có thể xảy ra ở người bệnh có hoặc khô"
+
+  - id: bach_cau_thap
+    type: lab
+    label: "Bạch cầu giảm"
+    threshold: "WBC < 5 K/uL"
+
+  - id: hflc_cao
+    type: lab
+    label: "HFLC tăng"
+    threshold: ">10% — đáp ứng miễn dịch hoạt hóa"
+
+  - id: aspirin
+    type: drug
+    label: "Aspirin"
+    source_pages: [208, 210, 217, 219]
+    evidence_snippet: "Xuất huyết nặng cũng có thể xảy ra ở người bệnh dùng các thuốc kháng viêm như Acetylsalicylic Acid ([Aspirin]), Ibuprofen hoặc dùng Corticoid, tiền sử loét dạ dày-tá tràng, viêm gan mạn. - Một số trường hợp nặ"
+
+  - id: ibuprofen
+    type: drug
+    label: "Ibuprofen"
+    source_pages: [208, 210, 217, 219]
+    evidence_snippet: "nặng cũng có thể xảy ra ở người bệnh dùng các thuốc kháng viêm như Acetylsalicylic Acid (Aspirin), [Ibuprofen] hoặc dùng Corticoid, tiền sử loét dạ dày-tá tràng, viêm gan mạn. - Một số trường hợp nặng có thể có"
+
+  - id: nsaid_other
+    type: drug
+    label: "Các NSAID khác"
+
+  - id: analgin
+    type: drug
+    label: "Analgin / Metamizole"
+    source_pages: [210, 219]
+    evidence_snippet: "ng liều Paracetamol không quá 60mg/kg cân nặng/24 giờ. + Không dùng aspirin (Acetylsalicylic Acid), [Analgin], Ibuprofen để điều trị vì có thể gây xuất huyết, toan máu. 27.4.1.2. Bù dịch sớm bằng đường uống -"
+
+  - id: paracetamol
+    type: drug
+    label: "Paracetamol"
+    note: "Được phép — chỉ paracetamol đơn chất, đúng liều."
+    source_pages: [210, 219]
+    evidence_snippet: "°C, cho thuốc hạ nhiệt, nới lỏng quần áo và lau mát bằng nước ấm. - Thuốc hạ nhiệt chỉ được dùng là [Paracetamol] đơn chất, liều dùng từ 10- 15mg/kg cân nặng/lần, cách nhau mỗi 4-6 giờ. - Chú ý: + Tổng liều Parace"
+
+  - id: oresol
+    type: intervention
+    label: "Bù dịch đường uống (Oresol)"
+    source_pages: [210, 219]
+    evidence_snippet: "ất huyết, toan máu. 27.4.1.2. Bù dịch sớm bằng đường uống - Khuyến khích người bệnh uống nhiều nước [oresol] hoặc nước trái cây (nước dừa, cam, chanh, ...) hoặc nước cháo loãng với muối. - Không ăn uống những"
+
+  - id: truyen_dich_tinh_mach
+    type: intervention
+    label: "Truyền dịch tĩnh mạch"
+    source_pages: [211, 212, 213, 220, 221, 222, 223, 224, 225]
+    evidence_snippet: "dõi mạch, HA, những dấu hiệu cảnh báo, lượng dịch đưa vào, nước tiểu và Hct mỗi 4-6 giờ. - Chỉ định [truyền dịch]: xem xét truyền dịch khi người bệnh nôn nhiều, không uống được và Hct cao hoặc có dấu mất nước. - P"
+
+  - id: nhap_vien_theo_doi
+    type: intervention
+    label: "Nhập viện theo dõi sát"
+    source_pages: [210, 211, 219, 220, 221, 222]
+    evidence_snippet: "iệu chứng và phải theo dõi chặt chẽ phát hiện sớm sốc xảy ra để xử trí kịp thời. - Xem xét chỉ định [nhập viện] trong các trường hợp sau: + Sống một mình. + Nhà xa cơ sở y tế, không thể nhập viện kịp thời khi bệ"
+
+  - id: hoi_suc_soc
+    type: intervention
+    label: "Hồi sức chống sốc"
+    source_pages: [211, 212, 213, 214, 221, 223, 224]
+    evidence_snippet: "hân có biểu hiện sốc (mạch nhanh, nhẹ, khó bắt, huyết áp kẹt, tụt, khó đo và Hct tăng): truyền dịch [chống sốc] như phác đồ điều trị sốc SXHD ở người lớn với liều chống sốc đầu tiên là cao phân tử 10- 15ml/kg/gi"
+
+  - id: theo_doi_ngoai_tru
+    type: intervention
+    label: "Theo dõi tại nhà / ngoại trú"
+    source_pages: [210, 219]
+    evidence_snippet: "UYỀN NHIỄM 27.4. ĐIỀU TRỊ 27.4.1. Điều trị sốt xuất huyết Dengue - Phần lớn các trường hợp đều được [điều trị ngoại trú] và theo dõi tại y tế cơ sở, chủ yếu là điều trị triệu chứng và phải theo dõi chặt chẽ phát hiện sớm"
+
+edges:
+  - {source: sot_cao, target: sxhd_thuong, relation: supports}
+  - {source: dau_dau, target: sxhd_thuong, relation: supports}
+  - {source: dau_co_khop, target: sxhd_thuong, relation: supports}
+  - {source: dau_hoc_mat, target: sxhd_thuong, relation: supports}
+  - {source: ban_xuat_huyet, target: sxhd_thuong, relation: supports}
+  - {source: da_niem_sung_huyet, target: sxhd_thuong, relation: supports}
+  - {source: dau_bung_nhieu, target: sxhd_canh_bao, relation: warning_of}
+  - {source: non_nhieu, target: sxhd_canh_bao, relation: warning_of}
+  - {source: chay_mau_niem_mac, target: sxhd_canh_bao, relation: warning_of}
+  - {source: gan_to, target: sxhd_canh_bao, relation: warning_of}
+  - {source: lu_du_vat_va, target: sxhd_canh_bao, relation: warning_of}
+  - {source: lu_du_vat_va, target: sxhd_nang, relation: warning_of, weight: 1.5}
+  - {source: tieu_it, target: sxhd_canh_bao, relation: warning_of}
+  - {source: tay_chan_lanh, target: sxhd_canh_bao, relation: warning_of}
+  - {source: tay_chan_lanh, target: sxhd_nang, relation: warning_of, weight: 1.5}
+  - {source: hct_tang_plt_giam, target: sxhd_canh_bao, relation: warning_of}
+  - {source: hct_tang_plt_giam, target: sxhd_nang, relation: warning_of, weight: 1.5}
+  - {source: tran_dich, target: sxhd_canh_bao, relation: warning_of}
+  - {source: tieu_cau_thap, target: sxhd_canh_bao, relation: supports}
+  - {source: hct_cao, target: sxhd_canh_bao, relation: supports}
+  - {source: ast_alt_cao, target: sxhd_canh_bao, relation: supports}
+  - {source: bach_cau_thap, target: sxhd_thuong, relation: supports}
+  - {source: hflc_cao, target: sxhd_thuong, relation: supports}
+  - {source: aspirin, target: sxhd_thuong, relation: contraindicated_for}
+  - {source: aspirin, target: sxhd_canh_bao, relation: contraindicated_for}
+  - {source: aspirin, target: sxhd_nang, relation: contraindicated_for}
+  - {source: ibuprofen, target: sxhd_thuong, relation: contraindicated_for}
+  - {source: ibuprofen, target: sxhd_canh_bao, relation: contraindicated_for}
+  - {source: ibuprofen, target: sxhd_nang, relation: contraindicated_for}
+  - {source: nsaid_other, target: sxhd_thuong, relation: contraindicated_for}
+  - {source: nsaid_other, target: sxhd_canh_bao, relation: contraindicated_for}
+  - {source: nsaid_other, target: sxhd_nang, relation: contraindicated_for}
+  - {source: analgin, target: sxhd_thuong, relation: contraindicated_for}
+  - {source: analgin, target: sxhd_canh_bao, relation: contraindicated_for}
+  - {source: analgin, target: sxhd_nang, relation: contraindicated_for}
+  - {source: paracetamol, target: sxhd_thuong, relation: treats}
+  - {source: paracetamol, target: sxhd_canh_bao, relation: treats}
+  - {source: oresol, target: sxhd_thuong, relation: treats}
+  - {source: truyen_dich_tinh_mach, target: sxhd_canh_bao, relation: treats}
+  - {source: truyen_dich_tinh_mach, target: sxhd_nang, relation: treats}
+  - {source: nhap_vien_theo_doi, target: sxhd_canh_bao, relation: treats}
+  - {source: hoi_suc_soc, target: sxhd_nang, relation: treats}
+  - {source: theo_doi_ngoai_tru, target: sxhd_thuong, relation: treats}
