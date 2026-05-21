@@ -1,0 +1,1033 @@
+"""
+app.py — CliMed Dengue Assistant (refactored + v2 integration)
+==============================================================
+
+Cấu trúc tab (sau khi tích hợp Mini Triage + Advanced Eval):
+
+  0. 📁 Data & Train        — split CSV 80/20, train model
+  1. 📷 OCR & Chuẩn hóa     — upload ảnh xét nghiệm
+  2. 💬 Chatbot             — UI ChatGPT-style + multi-conversation
+  3. 🩺 Mini Triage         — phân loại nhanh 1 BN theo 3 mức (MỚI)
+  4. 📊 Predictor           — kết quả train + giải thích "chỉ số từ đâu"
+  5. 🕸️ Graph viewer        — explorer knowledge graph
+  6. 🎯 Eval Chatbot        — auto-evaluate trên test set (đã NÂNG CẤP với
+                              eval_metrics v2: safety + calibration + quality)
+
+Toàn bộ UI components mới ở `src/streamlit_panels.py`.
+"""
+
+from __future__ import annotations
+
+import sys
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+
+SRC_DIR = Path(__file__).resolve().parent / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+# Core imports — chỉ giữ những gì còn dùng
+from _common import CRITICAL_SUPPORT_TEXT
+from exam_normalizer import attach_reference_flags, parse_exam_text_to_rows
+from ocr_engine import extract_text_from_uploaded_file
+from chat_history import SessionManager
+from data_split import (
+    create_split_files, load_split_meta, load_train_df, load_test_df,
+    split_files_exist, SPLIT_DIR,
+)
+
+
+st.set_page_config(
+    page_title="CliMed Dengue Assistant",
+    page_icon="🩺",
+    layout="wide",
+)
+
+# ============================================================================
+# Custom CSS — ChatGPT-style chat UI
+# ============================================================================
+# --- CUSTOM CSS ---
+st.markdown("""
+    <style>
+    /* Nền ứng dụng màu xám xanh cực nhẹ */
+    .stApp {
+        background-color: #f0f7ff;
+    }
+    
+    /* Tùy chỉnh Tab bar */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: transparent;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 45px;
+        white-space: pre-wrap;
+        background-color: #ffffff;
+        border-radius: 10px 10px 0px 0px;
+        gap: 1px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: 1px solid #e0e0e0;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #e3f2fd !important;
+        border-bottom: 3px solid #1976d2 !important;
+    }
+
+    /* Khung Chat giống ChatGPT */
+    .stChatMessage {
+        background-color: #ffffff !important;
+        border: 1px solid #e1e8ed !important;
+        border-radius: 15px !important;
+        padding: 15px !important;
+        margin-bottom: 10px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    
+    /* Tin nhắn của Assistant (màu xanh nhạt) */
+    [data-testid="stChatMessageAssistant"] {
+        background-color: #f8fbff !important;
+        border-left: 5px solid #64b5f6 !important;
+    }
+
+    /* Thanh nhập liệu chat */
+    .stChatInputContainer {
+        padding-bottom: 20px;
+    }
+    
+    /* Nút bấm và Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #ffffff;
+        border-right: 1px solid #e0e0e0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+# st.markdown("""
+# <style>
+# /* Chat message bubbles */
+# [data-testid="stChatMessage"] {
+#     border-radius: 12px;
+#     padding: 14px 18px;
+#     margin-bottom: 10px;
+#     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+# }
+# [data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) {
+#     background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
+# }
+# [data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarAssistant"]) {
+#     background: linear-gradient(135deg, #f8faff 0%, #f5f7fb 100%);
+#     border: 1px solid #e8edf5;
+# }
+
+# /* Sidebar session item */
+# .session-item {
+#     padding: 10px 12px;
+#     border-radius: 8px;
+#     margin-bottom: 4px;
+#     cursor: pointer;
+#     transition: background 0.15s;
+# }
+# .session-item:hover {
+#     background: rgba(99, 102, 241, 0.08);
+# }
+# .session-item-active {
+#     background: rgba(99, 102, 241, 0.15);
+#     font-weight: 500;
+# }
+
+# /* Chat input wider */
+# [data-testid="stChatInput"] textarea {
+#     border-radius: 10px;
+#     font-size: 15px;
+# }
+
+# /* Section dividers */
+# .section-divider {
+#     height: 1px;
+#     background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+#     margin: 18px 0;
+# }
+# </style>
+# """, unsafe_allow_html=True)
+
+
+# ============================================================================
+# Session state init
+# ============================================================================
+
+if "ocr_records" not in st.session_state:
+    st.session_state["ocr_records"] = pd.DataFrame()
+if "ocr_texts" not in st.session_state:
+    st.session_state["ocr_texts"] = []
+if "clinical_input" not in st.session_state:
+    st.session_state["clinical_input"] = {}
+if "active_session_id" not in st.session_state:
+    st.session_state["active_session_id"] = None
+
+
+@st.cache_resource
+def get_session_manager() -> SessionManager:
+    return SessionManager()
+
+session_mgr = get_session_manager()
+
+
+# ============================================================================
+# Sidebar
+# ============================================================================
+
+with st.sidebar:
+    st.markdown("### 🩺 CliMed Dengue")
+    st.caption("AI assistant cho phân loại SXHD")
+
+    st.markdown("---")
+    st.markdown("**📤 Upload ảnh xét nghiệm**")
+    uploaded_files = st.file_uploader(
+        "PNG / JPG / PDF",
+        type=["png", "jpg", "jpeg", "pdf"],
+        accept_multiple_files=True,
+        label_visibility="collapsed",
+    )
+
+    if uploaded_files:
+        all_rows = []
+        all_texts = []
+        for idx, f in enumerate(uploaded_files, start=1):
+            ocr_result = extract_text_from_uploaded_file(f)
+            all_texts.append({
+                "file_name": f.name,
+                "method": ocr_result.method,
+                "confidence": ocr_result.confidence,
+                "text": ocr_result.text,
+            })
+            parsed = parse_exam_text_to_rows(ocr_result.text)
+            if not parsed.empty:
+                parsed["report_id"] = idx
+                parsed["report_label"] = f.name
+                parsed["report_time"] = (
+                    pd.Timestamp.now().normalize() + pd.Timedelta(days=idx - 1)
+                )
+                all_rows.append(parsed)
+        if all_rows:
+            st.session_state["ocr_records"] = pd.concat(all_rows,
+                                                         ignore_index=True)
+        st.session_state["ocr_texts"] = all_texts
+        st.success(f"✅ Đọc xong {len(uploaded_files)} file")
+
+    # Chat sessions list (sẽ active ở tab Chatbot)
+    st.markdown("---")
+    st.markdown("**💬 Cuộc trò chuyện**")
+
+    if st.button("➕ Cuộc mới", width='stretch'):
+        new_sid = session_mgr.create_session()
+        st.session_state["active_session_id"] = new_sid
+        st.rerun()
+
+    sessions = session_mgr.list_sessions(sort_by="updated")
+    if not sessions:
+        st.caption("Chưa có cuộc trò chuyện nào")
+    else:
+        for s in sessions[:20]:
+            sid = s["session_id"]
+            is_active = (sid == st.session_state.get("active_session_id"))
+            label = "🟢 " + s["title"] if is_active else "💬 " + s["title"]
+            label_short = label if len(label) < 40 else label[:38] + "..."
+            if st.button(
+                label_short,
+                key=f"sess_btn_{sid}",
+                width='stretch',
+                help=f"{s['n_messages']} tin nhắn | {s['updated_at'][:16]}",
+            ):
+                st.session_state["active_session_id"] = sid
+                st.rerun()
+
+
+# ============================================================================
+# Header
+# ============================================================================
+
+st.title("🩺 CliMed Dengue Assistant")
+st.warning(CRITICAL_SUPPORT_TEXT)
+
+
+# ============================================================================
+# Tabs
+# ============================================================================
+
+(data_tab, ocr_tab, chat_tab, triage_tab, predictor_tab, graph_tab,
+ eval_tab) = st.tabs([
+    "📁 Data & Train",
+    "📷 OCR",
+    "💬 Chatbot",
+    "🩺 Mini Triage",
+    "📊 Predictor",
+    "🕸️ Graph viewer",
+    "🎯 Eval Chatbot",
+])
+
+
+# ============================================================================
+# Tab 0: Data & Train — chia CSV + train model
+# ============================================================================
+
+with data_tab:
+    st.subheader("📁 Data Split — chia CSV thành train / test")
+
+    st.caption(
+        "Chia file `data/NghiencuuHFLC.csv` thành 2 file riêng "
+        "`train_XX.csv` và `test_YY.csv` lưu vào `data/splits/`. "
+        "Sau đó các tab khác (Predictor, Eval, Chatbot) đọc trực tiếp "
+        "từ đây để đảm bảo không có data leakage."
+    )
+
+    # Hiển thị trạng thái split hiện tại
+    cur_meta = load_split_meta()
+    if cur_meta:
+        st.success(
+            f"✅ Đã có split: **{cur_meta['n_train']} train** / "
+            f"**{cur_meta['n_test']} test** "
+            f"(tạo lúc {cur_meta['created_at'][:19]}, seed={cur_meta['random_state']})"
+        )
+        with st.expander("📊 Phân lớp (theo cột `benhcanhcuoicunglagi`)"):
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown("**Train set:**")
+                st.json(cur_meta["train_class_distribution"])
+            with c2:
+                st.markdown("**Test set:**")
+                st.json(cur_meta["test_class_distribution"])
+        st.code(f"data/splits/{cur_meta['train_file']}\ndata/splits/"
+                f"{cur_meta['test_file']}", language=None)
+    else:
+        st.warning("⚠️ Chưa có file split. Bấm nút bên dưới để tạo.")
+
+    # Form tạo / re-tạo split
+    st.markdown("##### Cấu hình split")
+    sp_col1, sp_col2, sp_col3 = st.columns([2, 1, 1])
+    with sp_col1:
+        sp_test_pct = st.slider(
+            "Tỷ lệ test (%)", 10, 40, 20, 5,
+            help="20% là chuẩn. Có thể tăng lên 30% nếu muốn test set lớn hơn.",
+        )
+    with sp_col2:
+        sp_seed = st.number_input("Seed", 0, 9999, 42)
+    with sp_col3:
+        st.write("")
+        st.write("")
+        if st.button("🔀 Tạo split file", type="primary",
+                     width='stretch'):
+            try:
+                tp, ep = create_split_files(
+                    test_size=sp_test_pct / 100.0,
+                    random_state=int(sp_seed),
+                )
+                st.success(f"✅ Đã tạo:\n- `{tp.name}`\n- `{ep.name}`")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Lỗi: {e}")
+
+    # Train section
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+    st.subheader("🚂 Train model trên file 80%")
+
+    if not split_files_exist():
+        st.info("⬆️ Tạo split file trước rồi mới train được.")
+    else:
+        tr_col1, tr_col2, tr_col3 = st.columns([1.5, 1.5, 1])
+        with tr_col1:
+            tr_target_mode = st.selectbox(
+                "Target",
+                options=["multiclass", "binary_warning"],
+                help="multiclass = 3 lớp gốc (1, 2, 3). "
+                     "binary = thường vs cảnh-báo-hoặc-nặng.",
+            )
+        with tr_col2:
+            tr_focus = st.multiselect(
+                "Focus days (lab)",
+                options=list(range(1, 11)),
+                default=[3, 4, 5, 6, 7],
+                help="Khuyên N3-N7. N1-N2 thường missing >97% (BN chưa khám).",
+            )
+        with tr_col3:
+            tr_impute = st.toggle("Impute gap ngắn", value=False,
+                                   help="Stochastic imputation cho gap ≤ 2 ngày.")
+
+        if st.button("🚀 Train", type="primary"):
+            from predictor import run_pipeline_from_split_files
+            with st.spinner("Đang chạy pipeline..."):
+                try:
+                    result = run_pipeline_from_split_files(
+                        target_mode=tr_target_mode,
+                        focus_days=tr_focus if tr_focus else None,
+                        impute_short_gaps=tr_impute,
+                        save_dir="models/lgbm_warning",
+                    )
+                    st.session_state["predictor_result"] = result
+                    st.success("✅ Train xong! Xem kết quả ở tab '📊 Predictor'.")
+                except Exception as e:
+                    st.error(f"Lỗi: {e}")
+                    import traceback
+                    st.code(traceback.format_exc())
+
+
+# ============================================================================
+# Tab 1: OCR
+# ============================================================================
+
+with ocr_tab:
+    st.subheader("📷 OCR & Chuẩn hóa xét nghiệm")
+    st.caption(
+        "Upload ảnh/PDF phiếu xét nghiệm ở sidebar. Hệ thống dùng "
+        "Tesseract + EasyOCR fallback để bóc tách chỉ số y khoa."
+    )
+
+    if st.session_state["ocr_texts"]:
+        with st.expander("📄 Văn bản OCR thô"):
+            for item in st.session_state["ocr_texts"]:
+                st.markdown(
+                    f"**{item['file_name']}** — method: `{item['method']}` — "
+                    f"confidence: `{item['confidence']}`"
+                )
+                st.text(item["text"][:4000] if item["text"]
+                        else "Không đọc được văn bản.")
+                st.markdown("---")
+
+    ocr_df = (st.session_state["ocr_records"]
+              if isinstance(st.session_state["ocr_records"], pd.DataFrame)
+              else pd.DataFrame())
+    if ocr_df.empty:
+        st.info("Chưa có dữ liệu OCR. Upload ảnh ở sidebar để bắt đầu.")
+        ocr_df = pd.DataFrame(columns=[
+            "exam_name_raw", "exam_name_normalized", "value", "unit",
+            "reference_range", "source", "confidence",
+            "report_id", "report_label", "report_time",
+        ])
+
+    edited_df = st.data_editor(
+        attach_reference_flags(ocr_df),
+        width="stretch", num_rows="dynamic",
+    )
+    st.session_state["ocr_records"] = edited_df
+
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+    st.subheader("🩻 Thông tin lâm sàng")
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        age = st.number_input("Tuổi", 0, 120, 16)
+        sex = st.selectbox("Giới", ["nữ", "nam"])
+        fever_days = st.number_input("Số ngày sốt / ngày bệnh", 0, 20, 6)
+        fever_now = st.checkbox("Đang sốt", False)
+        can_drink = st.checkbox("Uống được", True)
+    with c2:
+        abdominal_pain = st.checkbox("Đau bụng")
+        vomiting = st.checkbox("Nôn")
+        vomiting_many = st.checkbox("Nôn nhiều / liên tục")
+        mucosal_bleeding = st.checkbox("Chảy máu niêm mạc")
+        oliguria = st.checkbox("Tiểu ít")
+    with c3:
+        lethargy = st.checkbox("Lừ đừ / vật vã / rối loạn ý thức")
+        dyspnea = st.checkbox("Khó thở")
+        cold_extremities = st.checkbox("Tay chân lạnh")
+        myalgia = st.checkbox("Đau cơ / đau khớp")
+        retro_orbital_pain = st.checkbox("Đau hốc mắt")
+
+    severe_bleeding = st.checkbox("Xuất huyết nặng")
+    hypotension = st.checkbox("Tụt huyết áp / nghi sốc")
+    comorbidity_text = st.text_input("Bệnh nền / thông tin thêm")
+
+    st.session_state["clinical_input"] = {
+        "age": age, "sex": sex, "fever_days": fever_days,
+        "fever_now": fever_now, "can_drink": can_drink,
+        "abdominal_pain": abdominal_pain, "vomiting": vomiting,
+        "vomiting_many": vomiting_many,
+        "mucosal_bleeding": mucosal_bleeding, "oliguria": oliguria,
+        "lethargy": lethargy, "dyspnea": dyspnea,
+        "cold_extremities": cold_extremities, "myalgia": myalgia,
+        "retro_orbital_pain": retro_orbital_pain,
+        "severe_bleeding": severe_bleeding, "hypotension": hypotension,
+        "comorbidity_text": comorbidity_text,
+    }
+
+
+# ============================================================================
+# Tab 2: Chatbot — ChatGPT-style với multi-conversation
+# ============================================================================
+
+with chat_tab:
+    # --- GIAO DIỆN TIÊU ĐỀ (CĂN GIỮA + ICON ĐẸP) ---
+    st.markdown("""
+        <div style="text-align: center; padding: 1.5rem 0rem;">
+            <h1 style="color: #1976d2; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.2em;">🩺</span> CliMed Intelligent Assistant
+            </h1>
+            <p style="color: #546e7a; font-style: italic; font-size: 1.1rem;">
+                Chatbot Y khoa chuyên sâu Sốt xuất huyết (Qwen 2.5 + RAG + Graph)
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # --- PHẦN CẤU HÌNH (GÓI GỌN TRONG EXPANDER ĐỂ TIẾT KIỆM DIỆN TÍCH) ---
+    with st.expander("⚙️ Cấu hình mô hình & Tính năng nâng cao", expanded=False):
+        # Hàng 1: LLM Settings
+        cfg_col1, cfg_col2, cfg_col3, cfg_col4 = st.columns([2, 1, 1, 1])
+        with cfg_col1:
+            backend_choice = st.selectbox(
+                "Backend", options=["auto", "ollama", "hf"],
+                label_visibility="visible", help="auto: ưu tiên Ollama, fallback HF."
+            )
+        with cfg_col2:
+            chat_temp = st.slider("Temperature", 0.0, 1.0, 0.3, 0.05)
+        with cfg_col3:
+            chat_max_tok = st.number_input("Max tokens", 128, 4096, 1024, step=128)
+        with cfg_col4:
+            st.write("---")
+            chat_use_rag = st.checkbox("Bật RAG", value=True, help="Truy xuất dữ liệu từ PDF.")
+
+        # Hàng 2: Logic Flags
+        flag_col1, flag_col2, flag_col3 = st.columns(3)
+        with flag_col1:
+            chat_use_graph = st.checkbox("🕸️ Graph reasoning", value=True)
+        with flag_col2:
+            chat_use_patient_rag = st.checkbox("👥 Tham chiếu BN tương tự", value=True)
+        with flag_col3:
+            chat_use_history = st.checkbox("📜 Giữ lịch sử chat", value=True)
+
+    # --- LOGIC KHỞI TẠO LLM (Giữ nguyên của bạn) ---
+    @st.cache_resource(show_spinner="Đang khởi tạo LLM...")
+    def _get_llm(_backend: str):
+        from llm_qwen import get_llm_client
+        return get_llm_client(backend=_backend)
+
+    llm_client = None
+    try:
+        llm_client = _get_llm(backend_choice)
+        st.info(f"🤖 **Backend đang dùng:** `{llm_client.name}`")
+    except Exception as e:
+        st.error(f"❌ LLM chưa sẵn sàng: {e}")
+        # ... (giữ nguyên phần hướng dẫn cài đặt của bạn)
+
+    if llm_client is not None:
+        # --- QUẢN LÝ SESSION (Giữ nguyên của bạn) ---
+        if st.session_state.get("active_session_id") is None:
+            st.session_state["active_session_id"] = session_mgr.create_session()
+
+        active_sid = st.session_state["active_session_id"]
+        active_session = session_mgr.load_session(active_sid)
+
+        if active_session:
+            # Thanh quản lý phiên chat (Đưa lên trên cùng của khung chat)
+            t_col1, t_col2 = st.columns([5, 1])
+            with t_col1:
+                new_title = st.text_input("Tên phiên", value=active_session.title, key=f"t_{active_sid}")
+                if new_title != active_session.title:
+                    session_mgr.rename_session(active_sid, new_title)
+            with t_col2:
+                if st.button("🗑️ Xóa", use_container_width=True):
+                    session_mgr.delete_session(active_sid)
+                    st.session_state["active_session_id"] = None
+                    st.rerun()
+
+            st.divider()
+
+            # --- HIỂN THỊ TIN NHẮN ---
+            for msg in active_session.messages:
+                with st.chat_message(msg.role):
+                    st.markdown(msg.content)
+
+            # --- NHẬP LIỆU & XỬ LÝ (Logic chính của bạn) ---
+            user_input = st.chat_input("Hỏi về bệnh nhân hoặc phác đồ điều trị...")
+
+            if user_input:
+                # 1. Lưu & Hiển thị User Msg
+                session_mgr.append_message(active_sid, "user", user_input)
+                with st.chat_message("user"):
+                    st.markdown(user_input)
+
+                # 2. Xử lý Context & RAG
+                from chatbot_engine import chat as run_chat, build_context_block
+                
+                # Build context từ OCR/Clinical
+                ctx_block = build_context_block(
+                    ocr_records=st.session_state.get("ocr_records"),
+                    clinical_input=st.session_state.get("clinical_input"),
+                    rule_output=None,
+                    trend_flags=None,
+                )
+
+                # Patient-RAG logic
+                extra_patient_rag_block = ""
+                if chat_use_patient_rag:
+                    try:
+                        from patient_rag import retrieve_similar_patients_for_chat
+                        sim_block = retrieve_similar_patients_for_chat(user_input, k=5)
+                        if sim_block: extra_patient_rag_block = "\n\n" + sim_block
+                    except: pass
+
+                # History logic
+                history_for_llm = []
+                if chat_use_history:
+                    history_for_llm = [{"role": m.role, "content": m.content} for m in active_session.messages[:-1]]
+
+                # 3. Phản hồi từ Assistant
+                with st.chat_message("assistant"):
+                    response_gen = run_chat(
+                        client=llm_client,
+                        user_question=user_input,
+                        history=history_for_llm,
+                        context=ctx_block + extra_patient_rag_block,
+                        stream=True,
+                        temperature=chat_temp,
+                        max_tokens=int(chat_max_tok),
+                        use_rag=chat_use_rag,
+                        rag_top_k=3,   # tuned: rag_optimizer.CFG.final_top_n
+                        use_graph=chat_use_graph,
+                        graph_symptoms=st.session_state.get("clinical_input"),
+                        graph_lab_records=st.session_state.get("ocr_records"),
+                    )
+                    full_response = st.write_stream(response_gen)
+
+                session_mgr.append_message(active_sid, "assistant", full_response)
+                st.rerun()
+
+
+# ============================================================================
+# Tab "Mini Triage" — paste BN → phân loại 3 mức + khuyến nghị xử trí
+# ============================================================================
+
+with triage_tab:
+    from streamlit_panels import render_mini_triage_panel
+    render_mini_triage_panel(session_mgr=session_mgr)
+
+
+# ============================================================================
+# Tab 3: Predictor — kết quả train + giải thích "chỉ số từ đâu"
+# ============================================================================
+
+with predictor_tab:
+    st.subheader("📊 Predictor")
+
+    if "predictor_result" not in st.session_state:
+        st.info(
+            "📍 Chưa có kết quả. Vào tab **'📁 Data & Train'** để tạo split "
+            "rồi train model."
+        )
+    else:
+        result = st.session_state["predictor_result"]
+
+        st.markdown("### Kết quả Cross-validation")
+        m1, m2, m3 = st.columns(3)
+        m1.metric("CV F1 (macro)", f"{result.cv_f1_mean:.3f}",
+                  delta=f"± {result.cv_f1_std:.3f}")
+        m2.metric("CV ROC AUC", f"{result.cv_auc_mean:.3f}")
+        m3.metric("Số folds", len(result.fold_results))
+
+        st.markdown("### Kết quả Holdout (test set)")
+        ho = result.holdout_metrics
+        h1, h2, h3, h4 = st.columns(4)
+        h1.metric("F1 macro", f"{ho['f1_macro']:.3f}")
+        h2.metric("Accuracy", f"{ho['accuracy']:.3f}")
+        if ho.get("roc_auc") is not None:
+            h3.metric("ROC AUC", f"{ho['roc_auc']:.3f}")
+        h4.metric("N test", ho["n_test"])
+
+        st.markdown("**Confusion matrix (holdout):**")
+        cm = ho["confusion_matrix"]
+        n = len(cm)
+        cm_df = pd.DataFrame(
+            cm,
+            index=[f"true={i}" for i in range(n)],
+            columns=[f"pred={i}" for i in range(n)],
+        )
+        st.dataframe(cm_df, width='content')
+
+        with st.expander("📋 Classification report"):
+            st.code(ho.get("classification_report", "(none)"), language="text")
+
+        st.markdown("### Top 20 features quan trọng (gain)")
+        fi = result.feature_importance
+        if fi:
+            fi_df = pd.DataFrame(
+                list(fi.items())[:20], columns=["Feature", "Importance"],
+            )
+            st.bar_chart(fi_df.set_index("Feature"), horizontal=True)
+
+    # Section giải thích
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+    st.subheader("📖 Các chỉ số train này từ đâu có?")
+
+    st.markdown("""
+**Pipeline:**
+
+1. **Split CSV** — file `data/NghiencuuHFLC.csv` (148 BN, 89 cột) được chia
+   stratified 80/20 theo cột target `benhcanhcuoicunglagi` (3 lớp: 1, 2, 3).
+   File train + test lưu tại `data/splits/` cho reproducibility.
+
+2. **Feature engineering** (`src/feature_engineering.py`):
+   - Drop các cột leakage (`thoigiannamvien`, `ketcuc`) và chính cột target.
+   - Lọc theo `focus_days` (mặc định N3-N7) — bỏ N1-N2 vì BN ít đến khám.
+   - Tính trend features: `_max`, `_min`, `_range`, `_first`, `_last`,
+     `_max_dropdown` (mức tụt lớn nhất giữa 2 ngày), `_max_rise`.
+
+3. **Missingness pipeline** (`src/missingness.py`):
+   - **Tier A** (luôn bật): thêm `_mask` (1 nếu có obs, 0 nếu NaN) và
+     `_tdelta` (số ngày từ obs gần nhất). LightGBM tự xử lý NaN.
+   - **Tier B** (optional): nội suy GAP NGẮN (≤2 ngày) bằng
+     linear interpolation + thêm physiologic noise σ (theo CV% Westgard) +
+     clip vào reference range. Tránh false confidence.
+
+4. **Train + Eval** (`src/predictor.py`):
+   - LightGBM `class_weight='balanced'` để chống imbalance.
+   - 5-fold Stratified CV trên train set → estimate generalization.
+   - Train final model trên toàn bộ train, evaluate trên test set.
+
+**Các metrics:**
+
+- **F1 macro**: trung bình F1 của các lớp, đối xử công bằng giữa lớp ít và
+  nhiều mẫu. Phù hợp với dataset imbalance này.
+- **ROC AUC**: khả năng phân biệt giữa các lớp ở mọi threshold.
+- **Confusion matrix**: bảng `[i][j]` = số BN có true label `i` mà model
+  dự đoán là `j`. Đường chéo càng đậm càng tốt.
+- **Feature importance**: tổng `gain` (mức cải thiện loss) khi feature đó
+  được dùng để split. Càng cao = feature càng quan trọng.
+""")
+
+
+# ============================================================================
+# Tab 4: Graph viewer
+# ============================================================================
+
+with graph_tab:
+    st.subheader("🕸️ Knowledge Graph SXHD — viewer & test")
+
+    st.info(
+        "**Graph này từ đâu?** "
+        "File `data/knowledge/graph_seed.yaml` được **viết tay (manually curated)** "
+        "từ guideline Bộ Y tế VN + WHO Dengue Guidelines. Đây KHÔNG phải graph "
+        "auto-extracted từ code — bác sĩ có thể edit YAML trực tiếp để thêm/sửa "
+        "node + edge mà không cần biết Python."
+    )
+
+    try:
+        from graph_engine import get_graph
+
+        graph = get_graph()
+        st.success(
+            f"✅ Loaded: **{graph.G.number_of_nodes()}** nodes, "
+            f"**{graph.G.number_of_edges()}** edges từ graph_seed.yaml"
+        )
+
+        with st.expander("📊 Stats theo loại"):
+            from collections import Counter
+            type_counts = Counter(graph.type_of(n) for n in graph.G.nodes)
+            edge_rels = Counter(d.get("relation", "?")
+                                for _, _, d in graph.G.edges(data=True))
+            cs1, cs2 = st.columns(2)
+            with cs1:
+                st.markdown("**Nodes by type:**")
+                for t, n in type_counts.most_common():
+                    st.write(f"- {t}: {n}")
+            with cs2:
+                st.markdown("**Edges by relation:**")
+                for r, n in edge_rels.most_common():
+                    st.write(f"- {r}: {n}")
+
+        # Test reasoning
+        st.markdown('<div class="section-divider"></div>',
+                    unsafe_allow_html=True)
+        st.markdown("##### 🧪 Test reasoning với context giả lập")
+
+        c1, c2 = st.columns(2)
+        with c1:
+            test_symptoms = st.multiselect(
+                "Symptoms",
+                options=["fever_now", "abdominal_pain", "vomiting_many",
+                         "mucosal_bleeding", "lethargy", "cold_extremities",
+                         "oliguria", "myalgia"],
+                default=["fever_now", "abdominal_pain"],
+            )
+        with c2:
+            test_labs_text = st.text_area(
+                "Lab records (mỗi dòng: NAME,VALUE,FLAG)",
+                value="PLT,80,low\nAST,150,high",
+                height=100,
+            )
+
+        max_hops = st.slider("Số hops traverse", 1, 3, 2)
+
+        if st.button("🚀 Run reasoning"):
+            from graph_engine import graph_facts_for_chat
+            symptoms_dict = {k: True for k in test_symptoms}
+            lab_rows = []
+            for line in test_labs_text.strip().split("\n"):
+                parts = [p.strip() for p in line.split(",")]
+                if len(parts) >= 3:
+                    try:
+                        lab_rows.append({
+                            "exam_name_normalized": parts[0],
+                            "value": float(parts[1]),
+                            "range_flag": parts[2],
+                        })
+                    except ValueError:
+                        pass
+            lab_df = pd.DataFrame(lab_rows) if lab_rows else None
+
+            text = graph_facts_for_chat(
+                symptoms=symptoms_dict, lab_records=lab_df,
+                rule_severity=None, max_hops=max_hops,
+            )
+            if text:
+                st.markdown(text)
+            else:
+                st.info("Không activate được node nào.")
+
+        with st.expander("📋 Browse tất cả nodes"):
+            all_types = sorted(set(graph.type_of(n) for n in graph.G.nodes))
+            sel_type = st.selectbox("Lọc theo type", ["(all)"] + all_types)
+            for nid in graph.G.nodes:
+                if sel_type != "(all)" and graph.type_of(nid) != sel_type:
+                    continue
+                attrs = graph.get_attrs(nid)
+                label = attrs.get("label", nid)
+                ntype = attrs.get("type", "?")
+                outs = []
+                for _, tgt, d in graph.G.out_edges(nid, data=True):
+                    outs.append(f"`{d.get('relation','?')}`→"
+                                f"{graph.label_of(tgt)}")
+                st.write(f"**[{ntype}] {label}** (`{nid}`)" +
+                         (f" — {', '.join(outs[:5])}" if outs else ""))
+
+    except FileNotFoundError as e:
+        st.error(f"Không tìm thấy graph_seed.yaml: {e}")
+    except Exception as e:
+        st.error(f"Lỗi load graph: {e}")
+
+
+# ============================================================================
+# Tab 5: Eval Chatbot
+# ============================================================================
+
+with eval_tab:
+    st.subheader("🎯 Đánh giá Chatbot trên test holdout")
+
+    # Sub-tabs: pipeline mới (Advanced) vs pipeline cũ (Legacy)
+    adv_subtab, legacy_subtab = st.tabs([
+        "🆕 Advanced Eval (mini_ai_bot + eval_metrics)",
+        "📜 Legacy Eval (eval_chatbot v1)",
+    ])
+
+    with adv_subtab:
+        from streamlit_panels import render_advanced_eval_panel
+        render_advanced_eval_panel(
+            load_test_df_fn=load_test_df,
+            split_files_exist_fn=split_files_exist,
+        )
+
+    with legacy_subtab:
+        if not split_files_exist():
+            st.warning("⚠️ Chưa có split file. Vào tab 'Data & Train' tạo trước.")
+        else:
+            cur_meta = load_split_meta()
+            st.caption(
+                f"Test set: **{cur_meta['n_test']} BN** từ "
+                f"`{cur_meta['test_file']}` "
+                f"(seed={cur_meta['random_state']})"
+            )
+
+            ev_a, ev_b, ev_c = st.columns([2, 1, 1])
+            with ev_a:
+                ev_target_mode = st.selectbox(
+                    "Target mode",
+                    options=["multiclass", "binary_warning"],
+                    key="ev_target_mode",
+                )
+            with ev_b:
+                ev_focus_on = st.toggle("Focus N3-N7", value=True)
+            with ev_c:
+                ev_style = st.selectbox(
+                    "Style",
+                    options=["script", "json"],
+                    help="script: bot viết báo cáo lâm sàng + JSON. "
+                         "json: chỉ JSON khô.",
+                )
+
+            ev_focus_days = ([3, 4, 5, 6, 7] if ev_focus_on
+                              else list(range(1, 11)))
+
+            # Step 1: Export
+            st.markdown('<div class="section-divider"></div>',
+                        unsafe_allow_html=True)
+            st.markdown("##### 📤 Bước 1: Xuất test text cho chatbox")
+
+            if st.button("Tạo test_for_chatbox.txt"):
+                from feature_engineering import prepare_features
+                from eval_chatbot import export_test_set_for_chatbox
+                test_df = load_test_df()
+                train_df = load_train_df()
+                full_df = pd.concat([train_df, test_df], ignore_index=True)
+                with st.spinner("Đang xuất..."):
+                    try:
+                        _, _, _meta = prepare_features(
+                            full_df,
+                            target_mode=ev_target_mode,
+                            focus_days=ev_focus_days,
+                            test_size=len(test_df) / len(full_df),
+                            random_state=cur_meta["random_state"],
+                        )
+                        paths = export_test_set_for_chatbox(
+                            _meta["X_test_raw"], _meta["y_test"],
+                            target_spec=_meta["target_spec"],
+                            output_dir="data/eval_test_set",
+                            focus_days=ev_focus_days,
+                        )
+                        st.session_state["eval_meta"] = _meta
+                        st.session_state["eval_focus_days"] = ev_focus_days
+                        st.session_state["eval_style"] = ev_style
+                        st.success(f"✅ Xuất {len(_meta['X_test_raw'])} BN")
+                        for k, v in paths.items():
+                            st.code(f"{k}: {v}")
+                    except Exception as e:
+                        st.error(f"Lỗi: {e}")
+
+            if "eval_paths" in st.session_state:
+                with st.expander("📄 Preview test_for_chatbox.txt"):
+                    try:
+                        with open(st.session_state["eval_paths"]["txt"],
+                                  encoding="utf-8") as f:
+                            text = f.read()
+                        blocks = text.split("--- Bệnh nhân #")
+                        preview = (blocks[0] + "--- Bệnh nhân #" +
+                                   "--- Bệnh nhân #".join(blocks[1:6]))
+                        st.code(preview, language="text")
+                    except Exception as e:
+                        st.error(f"Không đọc được: {e}")
+
+            # Step 2: Auto-eval
+            st.markdown('<div class="section-divider"></div>',
+                        unsafe_allow_html=True)
+            st.markdown("##### 🤖 Bước 2: Chạy bot tự động trên cả test set")
+
+            if "eval_meta" not in st.session_state:
+                st.info("⬆️ Bấm 'Tạo test_for_chatbox.txt' trước.")
+            else:
+                erun_a, erun_b = st.columns([2, 1])
+                with erun_a:
+                    ev_backend = st.selectbox("LLM backend",
+                                               options=["auto", "ollama", "hf"],
+                                               key="ev_backend")
+                with erun_b:
+                    ev_temp = st.slider("Temp", 0.0, 1.0, 0.1, 0.05,
+                                         key="ev_temp")
+
+                if st.button("🚀 Run auto-eval", type="primary"):
+                    from eval_chatbot import evaluate_chatbot_on_test
+                    from llm_qwen import get_llm_client
+                    try:
+                        llm = get_llm_client(backend=ev_backend)
+                        st.info(f"Backend: `{llm.name}`")
+                    except Exception as e:
+                        st.error(f"LLM chưa sẵn sàng: {e}")
+                        st.stop()
+
+                    _meta = st.session_state["eval_meta"]
+                    _style = st.session_state.get("eval_style", "json")
+                    _max_tok = 800 if _style == "script" else 400
+
+                    def chat_fn(prompt: str) -> str:
+                        return llm.chat(
+                            [{"role": "system",
+                              "content": "Bạn là phân loại viên y khoa SXHD. "
+                                         "Tuân thủ NGHIÊM định dạng output."},
+                             {"role": "user", "content": prompt}],
+                            temperature=ev_temp, max_tokens=_max_tok,
+                        )
+
+                    progress = st.progress(0.0, text="Bắt đầu...")
+                    log_placeholder = st.empty()
+                    log_lines = []
+
+                    def on_progress(idx, total, record):
+                        progress.progress(
+                            idx / total,
+                            text=f"BN {idx}/{total} — "
+                                 f"GT={record['ground_truth']} | "
+                                 f"Bot={record['bot_label'] or '?'}",
+                        )
+                        status = ("✅" if record["is_correct"]
+                                  else "❌" if record["is_valid"]
+                                  else "⚠️")
+                        log_lines.append(
+                            f"{status} BN#{record['patient_id']:2d} | "
+                            f"GT={record['ground_truth']:>15s} | "
+                            f"Bot={(record['bot_label'] or '—'):>15s}"
+                        )
+                        log_placeholder.code("\n".join(log_lines[-8:]))
+
+                    with st.spinner(f"Đang gọi bot ({_style})..."):
+                        eval_result = evaluate_chatbot_on_test(
+                            chat_fn,
+                            _meta["X_test_raw"], _meta["y_test"],
+                            target_spec=_meta["target_spec"],
+                            on_progress=on_progress,
+                            style=_style,
+                            focus_days=st.session_state.get("eval_focus_days"),
+                        )
+                    st.session_state["eval_result"] = eval_result
+                    st.success("✅ Eval xong")
+
+            # Step 3: kết quả
+            if "eval_result" in st.session_state:
+                st.markdown('<div class="section-divider"></div>',
+                            unsafe_allow_html=True)
+                st.markdown("##### 📊 Kết quả Eval")
+                er = st.session_state["eval_result"]
+
+                m1, m2, m3, m4 = st.columns(4)
+                m1.metric("Accuracy", f"{er.accuracy:.1%}")
+                m2.metric("F1 (macro)", f"{er.f1_macro:.3f}")
+                m3.metric("Valid", f"{er.n_valid}/{er.n_total}")
+                m4.metric("Correct", f"{er.n_correct}/{er.n_valid}")
+
+                if er.confusion_matrix:
+                    st.markdown("**Confusion matrix:**")
+                    cm_df = pd.DataFrame(
+                        er.confusion_matrix,
+                        index=[f"true={c}" for c in er.label_classes],
+                        columns=[f"pred={c}" for c in er.label_classes],
+                    )
+                    st.dataframe(cm_df, width='content')
+
+                per_df = pd.DataFrame(er.per_patient)
+                show_cols = [c for c in
+                             ["patient_id", "ground_truth", "bot_label",
+                              "bot_confidence", "is_correct", "parse_error"]
+                             if c in per_df.columns]
+                st.dataframe(per_df[show_cols], width='stretch',
+                             hide_index=True)
+
+                with st.expander("🔍 Drill-down từng BN"):
+                    sel = st.number_input("Patient ID", 0, len(per_df) - 1, 0)
+                    if 0 <= sel < len(per_df):
+                        rec = per_df.iloc[sel]
+                        st.markdown(
+                            f"**Ground truth:** `{rec['ground_truth']}` | "
+                            f"**Bot:** `{rec.get('bot_label', '—')}` | "
+                            f"**Conf:** {rec.get('bot_confidence', '—')}"
+                        )
+                        if rec.get("bot_reasoning"):
+                            st.markdown(f"**Reasoning:** {rec['bot_reasoning']}")
+                        if rec.get("parse_error"):
+                            st.warning(f"Parse error: {rec['parse_error']}")
+                        with st.expander("Raw response"):
+                            st.code(rec.get("raw_response", ""))
+
+                csv_bytes = per_df.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "⬇️ Download eval results (CSV)",
+                    data=csv_bytes,
+                    file_name="chatbot_eval_results.csv",
+                    mime="text/csv",
+                )
